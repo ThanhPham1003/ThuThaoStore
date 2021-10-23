@@ -49,9 +49,9 @@ const Firebase = {
       })
   },
 
-  // logOut: aysnc () => {
-  //   return firebase.auth().signOut();
-  // }
+  logOut: async () => {
+    return await firebase.auth().signOut();
+  },
 }
 
 const FirebaseProvider = (props) => {

@@ -45,7 +45,7 @@ export default function SigninScreen ({navigation})  {
   useEffect(() => {
     fire.auth().onAuthStateChanged((userCred) => {
       if(userCred){
-        setAuth(true);
+        //setAuth(true);
         userCred.getIdToken().then((token) => {
           setToken(token);
           console.log(token)

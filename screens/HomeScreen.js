@@ -1,10 +1,9 @@
-import react, { useEffect } from "react";
-import React from "react";
+import React, { useContext, useEffect, useState } from 'react';
 import axios from "axios";
-import { View, Text } from 'react-native'
-
+import { View, Text,StyleSheet, TouchableOpacity } from 'react-native'
+import {FirebaseContext} from '../context/FirebaseContext'
 export default function HomeScreen({token}) {
-
+  const firebase = useContext(FirebaseContext);
   useEffect(() => {
     if(token)
     {
@@ -13,19 +12,34 @@ export default function HomeScreen({token}) {
   }, [token])
 
   const fetchData = async (token) => {
-    const res = await axios.get("http://localhost:5000/api/todos", {
+    const res = await axios.post("http://localhost:5000/users", {
         headers: {
-          Authorization: "Thanh " + token,
+          authorization: "Thanh " + token,
         }
     });
-    
-
     console.log(res.data);
 
   }
 
+  const logOut = async () =>{
+    await firebase.logOut();
+  }
+
 
   return (
-    <Text> Home </Text>
+    <View style={styles.Container}>
+      <Text> Home </Text>
+      <TouchableOpacity  onPress={logOut}>
+        <Text> Logout </Text>
+      </TouchableOpacity>
+    </View>
   )
 }
+  const styles = StyleSheet.create({
+    Container: {
+      flex:1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+  })
+
