@@ -24,7 +24,6 @@ export default function SignupScreen ({navigation})  {
   // };
 
   const handleSignUp = async () => {
-    console.log("1111111");
     await firebase.signUp(email, password);
   };
   // const hangdleLogout = () => {

@@ -4,18 +4,21 @@ import React, { useContext, useEffect, useState } from 'react';
 import {Text, StyleSheet, View, TextInput, TouchableOpacity} from 'react-native';
 import {FirebaseContext} from '../context/FirebaseContext'
 import fire from 'firebase'
-import HomeScreen from './HomeScreen';
+import { TokenContext, TokenProvider } from '../context/TokenContext';
 
 
 
 export default function SigninScreen ({navigation})  {
+
   const [user, setUser] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [auth, setAuth] = useState(false);
   const [hasAccount, setHasAccount] = useState(true);
   const firebase = useContext(FirebaseContext);
-  const [token, setToken] = useState();
+ // const [token, setToken] = useState();
+  const [_, setToken] = useContext(TokenContext);
+
   const clearInputs = () => {
     setEmail('');
     setPassword('');
@@ -26,6 +29,7 @@ export default function SigninScreen ({navigation})  {
     .then((userCred) => {
       if(userCred){
         setAuth(true);
+        navigation.navigate('Home')
       }
     });
   };
@@ -48,7 +52,7 @@ export default function SigninScreen ({navigation})  {
         //setAuth(true);
         userCred.getIdToken().then((token) => {
           setToken(token);
-          console.log(token)
+
         })
       }
     })
@@ -57,9 +61,9 @@ export default function SigninScreen ({navigation})  {
 
   return(
     <>
-    {auth ? (
-      <HomeScreen token={token} />
-    ) : (
+    {/* {auth ? (
+      <HomeScreen token={token} navigation={navigation}/>
+    ) : ( */}
       <View  style={styles.Container}>
         <View style={styles.LoginSpace}>
           <TextInput
@@ -86,7 +90,7 @@ export default function SigninScreen ({navigation})  {
             
         </View>
       </View>
-    )}
+    {/* )} */}
     </>
   )
 }

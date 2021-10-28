@@ -51,6 +51,7 @@ const Firebase = {
 
   logOut: async () => {
     return await firebase.auth().signOut();
+    
   },
 }
 
