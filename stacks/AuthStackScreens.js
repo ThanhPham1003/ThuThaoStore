@@ -10,13 +10,12 @@ export default AuthStackScreens = () => {
   const AuthStack = createStackNavigator()
 
   return(
-    <NavigationContainer>
+
       <AuthStack.Navigator>
         <AuthStack.Screen name="Sign in" component={SigninScreen} />
         <AuthStack.Screen name="Sign up" component={SignupScreen} />
-        <AuthStack.Screen name="Home" component={HomeScreen} />
-        <AuthStack.Screen name="Details" component={DetailsScreen} />
+        {/* <AuthStack.Screen name="Home" component={HomeScreen} />
+        <AuthStack.Screen name="Details" component={DetailsScreen} /> */}
       </AuthStack.Navigator>
-    </NavigationContainer>
   )
 }

@@ -17,19 +17,32 @@ export default function SigninScreen ({navigation})  {
   const [hasAccount, setHasAccount] = useState(true);
   const firebase = useContext(FirebaseContext);
  // const [token, setToken] = useState();
-  const [_, setToken] = useContext(TokenContext);
+  const [token, setToken] = useContext(TokenContext);
 
-  const clearInputs = () => {
-    setEmail('');
-    setPassword('');
-  }
+
+  useEffect(() => {
+    console.log("123456");
+    fire.auth().onAuthStateChanged((userCred) => {
+      if(userCred){
+        //setAuth(true);
+        userCred.getIdToken().then((tk) => {
+          setToken({
+            token: tk,
+            isLoggedIn:true,
+          });
+          //console.log("2222222", token)
+        })
+      }
+    })
+  },[auth])
 
   const handleLogin = async () => {
     await firebase.signIn(email,password)
     .then((userCred) => {
       if(userCred){
         setAuth(true);
-        navigation.navigate('Home')
+        //navigation.navigate('Home')
+        console.log("654654")
       }
     });
   };
@@ -46,17 +59,6 @@ export default function SigninScreen ({navigation})  {
 
 
 
-  useEffect(() => {
-    fire.auth().onAuthStateChanged((userCred) => {
-      if(userCred){
-        //setAuth(true);
-        userCred.getIdToken().then((token) => {
-          setToken(token);
-
-        })
-      }
-    })
-  }, [])
 
 
   return(

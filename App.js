@@ -1,13 +1,17 @@
 import React from 'react'
 
 import { FirebaseProvider } from './context/FirebaseContext';
-import AuthStackScreens from "./stacks/AuthStackScreens";
+import AppStackScreens from "./stacks/AppStackScreens";
 import { TokenProvider } from './context/TokenContext';
+import TabStackScreens from './stacks/TabStackScreens';
+import { NavigationContainer } from '@react-navigation/native';
 const App = () => {
   return(
     <FirebaseProvider>
       <TokenProvider>
-        <AuthStackScreens />
+        <NavigationContainer>
+          <AppStackScreens/>
+        </NavigationContainer>
       </TokenProvider>
     </FirebaseProvider>
   )

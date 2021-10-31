@@ -4,6 +4,7 @@ const TokenContext = createContext([{}, () => {}])
 const TokenProvider = (props) => {
     const [state, setState] = useState({
         token:"",
+        isLoggedIn: null,
     })
     return <TokenContext.Provider value={[state, setState]}>{props.children}</TokenContext.Provider>
 }
