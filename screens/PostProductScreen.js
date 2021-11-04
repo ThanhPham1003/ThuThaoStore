@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Button } from 'react-native';
-// import { Camera } from 'expo-camera';
+import * as ImagePicker from 'expo-image-picker';
 import API from '../config/environmentVariables';
 export default function PostProductScreen(props){
     const {navigation} = props;
@@ -10,33 +10,58 @@ export default function PostProductScreen(props){
     const [age, setAge] = useState();
     const [colorProduct, setColorProduct] =  useState();
     const [price, setPrice] = useState();
+    const [image, setImage] = useState(null);
     
-    // useEffect(() => {
-    //     console.log("234234");
-    //     if(url)
-    //     {
-    //         sendData(url);
-    //     }
-    // },[url])
+    useEffect(() => {
+        (async () => {
+          if (Platform.OS !== 'web') {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+              alert('Sorry, we need camera roll permissions to make this work!');
+            }
+          }
+        })();
+      }, []);
 
-
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+  
+        console.log('11111 pickImage',result);
+  
+        if (!result.cancelled) {
+            setImage(result.uri);
+        }
+    };
+    
 
     const sendData = async() =>{
-        console.log("222222");
-        const res = await axios.post( API.BASE_URL + "products", {
-            headers: {
-                uid: "123456",
-                name: name,
-                age: age,
-                color: colorProduct,
-                price: price,
-                url: url,
-            },
-        })
+        const data  = new FormData()
+        
+        data.append('uid', '123456');
+        data.append('name', name);
+        data.append('age', age);
+        data.append('color', colorProduct);
+        data.append('price', price);
+        data.append('url', '1234567');
+        data.append('productImage', {
+            uri: image,
+            type: 'image/png',
+            name: 'image.png',
+          });
+
+        const res = await axios.post( API.BASE_URL + "products", data)
     }
 
-    
-    
+    const uploadImage = async () => {
+        console.log('22222233334444');
+        await pickImage();
+    }
+
     return(
         <View style ={styles.Container}>
 
@@ -71,6 +96,11 @@ export default function PostProductScreen(props){
                 onChangeText={price => setPrice(price)}
                 value={price}
             />
+
+            <TouchableOpacity style={styles.SendBot} onPress={() => uploadImage()}>
+                <Text> Select from Gallery </Text>
+            </TouchableOpacity>
+
             <TouchableOpacity style={styles.SendBot} onPress={() => sendData()}>
                 <Text> Send </Text>
             </TouchableOpacity>
