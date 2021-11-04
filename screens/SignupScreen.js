@@ -1,6 +1,6 @@
 
 import React, { useContext, useEffect, useState } from 'react';
-import {Text, StyleSheet, View, TextInput, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, View, TextInput, TouchableOpacity,Image} from 'react-native';
 import {FirebaseContext} from '../context/FirebaseContext'
 
 
@@ -41,7 +41,13 @@ export default function SignupScreen ({navigation})  {
 
   return(
     <View  style={styles.Container}>
-      <View style={styles.LoginSpace}>
+      <View style={styles.LogoSpace}>
+          <Image
+          source = {require('../assets/cute-petshop-logo-with-cat-dog_454510-56.jpg')}
+          />
+
+        </View>
+      <View style={styles.SignUpSpace}>
         <TextInput
           style={styles.UserInput}
           placeholder=' Enter your Email...'
@@ -56,12 +62,12 @@ export default function SignupScreen ({navigation})  {
           value={password}
         />
 
-            <TouchableOpacity style={styles.LoginBottom} onPress={handleSignUp}>
+            <TouchableOpacity style={styles.SignUpBottom} onPress={handleSignUp}>
               <Text> Sign Up </Text>
             </TouchableOpacity>
-            <View style={styles.SignUp}>
+            <View style={styles.LoginSpace}>
               <Text> Already have an account? </Text>
-              <TouchableOpacity onPress={() => navigation.navigate("Sign in")}><Text>Login</Text></TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("Sign in")}><Text style={styles.LoginText}>Login</Text></TouchableOpacity>
             </View>
             
           
@@ -74,29 +80,42 @@ export default function SignupScreen ({navigation})  {
 const styles = StyleSheet.create({
   Container: {
     flex:1,
+    backgroundColor: '#f9e3bd',
   },
-  LoginSpace: {
-    flex: 2,
+  LogoSpace:{
+    flex: 3,
+    marginLeft: 17,
+  },
+  SignUpSpace: {
+    flex: 7,
     justifyContent: 'center',
     alignItems: 'center'
   },
   UserInput: {
     height: 40,
     width: '60%',
-    borderWidth: 2,
-    borderColor: '#ccc',
+    borderWidth: 5,
+    borderColor: '#efb65c',
+    borderRadius: 20,
     margin: 10,
+    padding: 10,
   },
 
-  LoginBottom:{
-    borderColor: '#ccc',
+  SignUpBottom:{
+    borderColor: '#efb65c',
     borderWidth: 2,
+    borderRadius: 10,
     height: 30,
     width:'20%',
-    alignItems:'center'
+    alignItems:'center',
+    justifyContent: 'center',
+    backgroundColor: '#efb65b'
   },
-  SignUp:{
+  LoginSpace:{
     flexDirection: 'row',
+  },
+  LoginText:{
+    color: '#76c4d7'
   }
   
 })

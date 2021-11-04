@@ -13,10 +13,11 @@ export default TabStackScreens = () => {
 
     return(
             <TabStack.Navigator>
+                <TabStack.Screen name="Home" component={HomeScreen} />
                 <TabStack.Screen name="Post" component={PostProductScreen} />
                 <TabStack.Screen name="Profile" component={ProfileScreen} />
-                <TabStack.Screen name="Home" component={HomeScreen} />
-                <TabStack.Screen name="Details" component={DetailsScreen} />
+
+                {/* <TabStack.Screen name="Details" component={DetailsScreen} /> */}
             </TabStack.Navigator>
     )
 }

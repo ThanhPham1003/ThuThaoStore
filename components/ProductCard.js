@@ -6,7 +6,7 @@ export default ProductCard = (props) => {
     const {data, navigation}  = props
     const {item} = data;
     const [id, setID] = useState();
-
+    
     const details = (id) => {
 
         navigation.navigate('Details',{id})

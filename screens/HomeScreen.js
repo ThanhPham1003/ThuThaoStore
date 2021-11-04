@@ -5,19 +5,23 @@ import {FirebaseContext} from '../context/FirebaseContext'
 import { TokenContext, TokenProvider } from '../context/TokenContext';
 //import { FlatList } from 'react-native-gesture-handler';
 import ProductCard from '../components/ProductCard';
+import { TextInput } from 'react-native-gesture-handler';
+import API from '../config/environmentVariables'
 
 // export default function HomeScreen({token, navigation}) {
   export default function HomeScreen(props) {
   const {navigation} = props;
   const firebase = useContext(FirebaseContext);
-  const [token, _] = useContext(TokenContext);
+  const [token, setToken] = useContext(TokenContext);
   const [products, setProducts] = useState([]);
+  const [filterProducts, setFilterProducts] = useState([]);
+  const [search, setSearch] = useState('');
   useEffect(() => {
     if(token)
     {
       fetchData(token);
     }
-  }, [token])
+  }, [])
 
   const fetchData = async (token) => {
     // const req = await axios.post("http://localhost:5000/users", {
@@ -26,16 +30,41 @@ import ProductCard from '../components/ProductCard';
     //     }
     // });
     // console.log(req.data);
-      const res = await axios.get("http://192.168.1.9:5000/products");
+      const res = await axios.get(API.BASE_URL + "products");
+      console.log('aaaaaa', API.BASE_URL + "products");
       setProducts(res.data);
-
+      //console.log(res.data.nam);
+      setFilterProducts(res.data);
+      //console.log("555555", res.data);
   }
 
   const logOut = async () =>{
 
     await firebase.logOut();
-    navigation.navigate("Sign in");
+    setToken({
+      token: "",
+      isLoggedIn: false,
+    });
   }
+
+  const searchFilter = (text) => {
+    if(text) {
+      //console.log(text)
+      const newData = filterProducts.filter((item) => {
+        //console.log(item.name);
+        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+        //console.log(itemData.indexOf(textData))
+      });
+      setProducts(newData);
+      setSearch(text);
+    }else{
+      setProducts(filterProducts);
+      setSearch(text);
+    }
+  }
+
 
   // const goToDetail = () => {
   //   console.log('aaaaaaaaa');
@@ -58,10 +87,18 @@ import ProductCard from '../components/ProductCard';
               <Text> Price: 1000$ </Text>
           </View>
         </View> */}
+        <TextInput 
+          style={styles.SearchBar}
+          value={search}
+          placeholder="Search Here"
+          onChangeText={(text) => searchFilter(text)}
+        
+        />
+
         <FlatList
           data={products}
           renderItem={(item) => <ProductCard data={item} navigation={navigation}/> }
-          keyExtractor={item => item._id}
+          keyExtractor={(item, index) => index.toString()}
         />
       <TouchableOpacity  onPress={logOut}>
         <Text> Logout </Text>
@@ -73,9 +110,17 @@ import ProductCard from '../components/ProductCard';
     Container: {
       // justifyContent: 'center',
       //alignItems: 'center',
-      backgroundColor:'#a9d1b9',
+      backgroundColor:'#f9e3bd',
       flex:1,
       
+    },
+    SearchBar:{
+      height: 40, 
+      borderWidth: 3,
+      borderRadius: 10,
+      borderColor: '#009688',
+      margin: 5,
+      padding: 10,
     },
     // HomeTittle:{
     //   fontSize: 64,
