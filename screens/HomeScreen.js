@@ -7,7 +7,7 @@ import { TokenContext, TokenProvider } from '../context/TokenContext';
 import ProductCard from '../components/ProductCard';
 import { TextInput } from 'react-native-gesture-handler';
 import API from '../config/environmentVariables'
-
+import Ionicons from 'react-native-vector-icons/Ionicons';
 // export default function HomeScreen({token, navigation}) {
   export default function HomeScreen(props) {
   const {navigation} = props;
@@ -31,7 +31,6 @@ import API from '../config/environmentVariables'
     // });
     // console.log(req.data);
       const res = await axios.get(API.BASE_URL + "products");
-      console.log('aaaaaa', API.BASE_URL + "products");
       setProducts(res.data);
       //console.log(res.data.nam);
       setFilterProducts(res.data);
@@ -74,27 +73,16 @@ import API from '../config/environmentVariables'
 
   return (
     <View style={styles.Container}>
-        {/* <Image
-        source = {{uri: "https://ichef.bbci.co.uk/news/976/cpsprodpb/EB24/production/_112669106_66030514-b1c2-4533-9230-272b8368e25f.jpg"}}
-        style={styles.ProductImage} />
-        <View style={styles.ProductTittleAndInfo}>
-          <View style={styles.ProductTittle}>
-            <Text style={styles.ProductTittleText}> Husky </Text>
-          </View>
-          <View style={styles.ProductInfo}>
-              <Text> Age: 1 months </Text>
-              <Text> Color: Black </Text>
-              <Text> Price: 1000$ </Text>
-          </View>
-        </View> */}
+      <View style={styles.SearchSpace}>
+        <Ionicons name="search" size={25} style={styles.SearchIcon}/>
         <TextInput 
-          style={styles.SearchBar}
+          //style={styles.SearchBar}
           value={search}
           placeholder="Search Here"
           onChangeText={(text) => searchFilter(text)}
         
         />
-
+      </View>
         <FlatList
           data={products}
           renderItem={(item) => <ProductCard data={item} navigation={navigation}/> }
@@ -114,14 +102,18 @@ import API from '../config/environmentVariables'
       flex:1,
       
     },
-    SearchBar:{
-      height: 40, 
+    
+    SearchSpace:{
+      flexDirection: 'row',
       borderWidth: 3,
       borderRadius: 10,
-      borderColor: '#009688',
+      borderColor: '#efb65c',
       margin: 5,
-      padding: 10,
     },
+    SearchIcon:{
+      margin:10,
+    },
+
     // HomeTittle:{
     //   fontSize: 64,
     //   fontWeight: "200",

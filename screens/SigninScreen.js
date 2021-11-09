@@ -1,73 +1,69 @@
 
 import { setStatusBarHidden } from 'expo-status-bar';
 import React, { useContext, useEffect, useState } from 'react';
-import {Text, StyleSheet, View, TextInput, TouchableOpacity, Image} from 'react-native';
+import {Text, StyleSheet, View, TextInput, TouchableOpacity, Image, Alert, KeyboardAvoidingView} from 'react-native';
 import {FirebaseContext} from '../context/FirebaseContext'
-import fire from 'firebase'
 import { TokenContext, TokenProvider } from '../context/TokenContext';
-
-
+import API from '../config/environmentVariables'
+import axios from "axios";
 
 export default function SigninScreen ({navigation})  {
 
   const [user, setUser] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [auth, setAuth] = useState(false);
   const [hasAccount, setHasAccount] = useState(true);
   const firebase = useContext(FirebaseContext);
- // const [token, setToken] = useState();
+ const [tk, setTk] = useState(null);
   const [token, setToken] = useContext(TokenContext);
 
 
   useEffect(() => {
-    fire.auth().onAuthStateChanged((userCred) => {
-      if(userCred){
-        //setAuth(true);
-        userCred.getIdToken().then((tk) => {
-          setToken({
-            token: tk,
-            isLoggedIn:true,
-          });
-        })
-      }
-    })
-  },[auth])
+    if(tk){
+      fetchData(tk)
+    }
+  },[tk])
+
+  const fetchData = async (token) => {
+    try{
+    const res = await axios.get(API.BASE_URL, {
+        headers: {
+          authorization: "Thanh " + tk,
+        }
+    });
+    if(res.data === 'Verified')
+    {
+      setToken(({
+        token: tk,
+        isLoggedIn: true,
+      }))
+    }
+    else alert('Wrong token')
+  } catch(err){
+    alert('Cannot connect to Server')
+  }
+    
+  }
+
 
   const handleLogin = async () => {
-    await firebase.signIn(email,password)
-    .then((userCred) => {
-      if(userCred){
-        setAuth(true);
-        //navigation.navigate('Home')
-        console.log("654654")
-      }
-    });
+    const tk = await firebase.signIn(email,password);
+    setTk(tk);
   };
-
-  // const handleSignUp = async () => {
-  //   console.log("1111111");
-  //   await firebase.signUp(email, password);
-  // };
-  // const hangdleLogout = () => {
-  //   fire.auth().signOut();
-  // };
-
-  
-
-
 
 
 
   return(
-    <>
-    {/* {auth ? (
-      <HomeScreen token={token} navigation={navigation}/>
-    ) : ( */}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{flex: 1}}
+    >
       <View  style={styles.Container}>
         <View style={styles.LogoSpace}>
           <Image
           source = {require('../assets/cute-petshop-logo-with-cat-dog_454510-56.jpg')}
+          style={styles.LogoStyle}
           />
 
         </View>
@@ -81,8 +77,10 @@ export default function SigninScreen ({navigation})  {
           <TextInput
             style={styles.UserInput}
             placeholder=' Password'
+            secureTextEntry={true}
             onChangeText={password => setPassword(password.trim())}
             value={password}
+            
           />
   
               <TouchableOpacity style={styles.LoginBottom} onPress={handleLogin}>
@@ -96,8 +94,7 @@ export default function SigninScreen ({navigation})  {
             
         </View>
       </View>
-    {/* )} */}
-    </>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -107,12 +104,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9e3bd',
   },
   LogoSpace:{
-    flex: 3,
+    flex: 5,
     marginLeft: 17,
   },
+  LogoStyle: {
+    height:'100%',
+    width: '100%'
+  },
   LoginSpace: {
-    flex: 7,
-    justifyContent: 'center',
+    flex: 5,
+    //justifyContent: 'center',
     alignItems: 'center'
   },
   UserInput: {
@@ -134,10 +135,12 @@ const styles = StyleSheet.create({
     width:'20%',
     alignItems:'center',
     justifyContent: 'center',
-    backgroundColor: '#efb65b'
+    backgroundColor: '#efb65b',
+    marginTop:30,
   },
   SignUpSpace:{
     flexDirection: 'row',
+    marginTop:30
   },
   SignUpText:{
     color: '#76c4d7'

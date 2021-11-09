@@ -7,11 +7,19 @@ import TabStackScreens from './TabStackScreens';
 import DetailsScreen from '../screens/DetailsScreen'
 export default MainStackScreens = () => {
   const MainStack = createStackNavigator()
-
+  const screenOptions = {
+    headerStyle: {
+      backgroundColor: '#efb65b',
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      fontWeight: 'bold',
+    },
+  }
   return(
 
-      <MainStack.Navigator>
-        <MainStack.Screen name="HomeScreen" component={TabStackScreens} />
+      <MainStack.Navigator screenOptions={screenOptions}>
+        <MainStack.Screen name="Pet Shop" component={TabStackScreens} />
         <MainStack.Screen name="Details" component={DetailsScreen} />
         {/* <AuthStack.Screen name="Home" component={HomeScreen} />
         <AuthStack.Screen name="Details" component={DetailsScreen} /> */}

@@ -11,7 +11,9 @@ export default AuthStackScreens = () => {
 
   return(
 
-      <AuthStack.Navigator>
+      <AuthStack.Navigator screenOptions={{
+        headerShown: false
+      }}>
         <AuthStack.Screen name="Sign in" component={SigninScreen} />
         <AuthStack.Screen name="Sign up" component={SignupScreen} />
         {/* <AuthStack.Screen name="Home" component={HomeScreen} />

@@ -9,7 +9,9 @@ export default AppStackScreens = () => {
     const AppStack = createStackNavigator();
     const [token, _ ] = useContext(TokenContext);
     return (
-            <AppStack.Navigator>
+            <AppStack.Navigator screenOptions={{
+                headerShown: false
+              }}>
                 {token.isLoggedIn ? (
                     <AppStack.Screen name="Main" component={MainStackScreens} />
                 ):(

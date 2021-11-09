@@ -5,11 +5,10 @@ import * as ImagePicker from 'expo-image-picker';
 import API from '../config/environmentVariables';
 export default function PostProductScreen(props){
     const {navigation} = props;
-    const [url, setUrl] = useState();
-    const [name, setName] = useState();
-    const [age, setAge] = useState();
-    const [colorProduct, setColorProduct] =  useState();
-    const [price, setPrice] = useState();
+    const [name, setName] = useState('');
+    const [age, setAge] = useState('');
+    const [colorProduct, setColorProduct] =  useState('');
+    const [price, setPrice] = useState('');
     const [image, setImage] = useState(null);
     
     useEffect(() => {
@@ -31,8 +30,6 @@ export default function PostProductScreen(props){
             quality: 1,
         });
   
-        console.log('11111 pickImage',result);
-  
         if (!result.cancelled) {
             setImage(result.uri);
         }
@@ -47,31 +44,27 @@ export default function PostProductScreen(props){
         data.append('age', age);
         data.append('color', colorProduct);
         data.append('price', price);
-        data.append('url', '1234567');
         data.append('productImage', {
             uri: image,
-            type: 'image/png',
-            name: 'image.png',
+            type: 'image',
+            name: image,
           });
 
         const res = await axios.post( API.BASE_URL + "products", data)
+        alert("Posted successfully");
+        setName('');
+        setAge('');
+        setImage(null);
+        setPrice('');
+        setColorProduct('');
     }
 
     const uploadImage = async () => {
-        console.log('22222233334444');
         await pickImage();
     }
 
     return(
         <View style ={styles.Container}>
-
-        
-            <TextInput
-                style={styles.ProductInput}
-                placeholder=' Enter your URL...'
-                onChangeText={url => setUrl(url)}
-                value={url}
-            />
             <TextInput
                 style={styles.ProductInput}
                 placeholder='Name'

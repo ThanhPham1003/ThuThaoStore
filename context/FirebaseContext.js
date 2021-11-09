@@ -1,10 +1,10 @@
-import React, {useState, createContext} from "react";
+import React, {useContext,useState, createContext} from "react";
 
 import firebase from "firebase";
 import 'firebase/auth';
 import config from '../config/fire';
-
-
+import { TokenContext, TokenProvider } from '../context/TokenContext';
+//const [_, setToken] = useContext(TokenContext)
 const FirebaseContext = createContext()
 
 if(!firebase.apps.length){
@@ -14,8 +14,14 @@ if(!firebase.apps.length){
 
 
 const Firebase = {
+  getCurrentUser: () => {
+    return firebase.auth().currentUser
+  },
+
+
+
   signIn: async (email, password) => {
-    return firebase
+   await firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
     .catch(err => {
@@ -30,10 +36,17 @@ const Firebase = {
           break;  
       }
     })
+    try{
+      const user = Firebase.getCurrentUser().getIdToken(user);
+      return user;
+    }catch(err)
+    {
+      return {message: err}
+    }
   },
 
   signUp: async (email, password) =>{
-    return await firebase
+    await firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .catch(err => {
@@ -47,6 +60,13 @@ const Firebase = {
             break;  
         }
       })
+      try{
+        const user = Firebase.getCurrentUser().getIdToken(user);
+        return user;
+      }catch(err)
+      {
+        return {message: err}
+      }
   },
 
   logOut: async () => {

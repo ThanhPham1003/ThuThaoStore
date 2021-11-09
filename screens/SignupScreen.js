@@ -1,78 +1,91 @@
 
 import React, { useContext, useEffect, useState } from 'react';
-import {Text, StyleSheet, View, TextInput, TouchableOpacity,Image} from 'react-native';
+import {Text, StyleSheet, View, TextInput, TouchableOpacity,Image,KeyboardAvoidingView} from 'react-native';
 import {FirebaseContext} from '../context/FirebaseContext'
-
-
+import { TokenContext, TokenProvider } from '../context/TokenContext';
+import API from '../config/environmentVariables'
+import axios from "axios";
 
 
 export default function SignupScreen ({navigation})  {
-  const [user, setUser] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   
-  const [hasAccount, setHasAccount] = useState(true);
   const firebase = useContext(FirebaseContext);
-
-  const clearInputs = () => {
-    setEmail('');
-    setPassword('');
+  const [token, setToken] = useContext(TokenContext);
+  const [tk, setTk] = useState(null);
+  useEffect(() => {
+    if(tk){
+      fetchData(tk)
+    }
+  },[tk])
+  const fetchData = async (token) => {
+    try{
+      const res = await axios.get(API.BASE_URL, {
+          headers: {
+            authorization: "Thanh " + tk,
+          }
+      });
+      if(res.data === 'Verified')
+      {
+        setToken(({
+          token: tk,
+          isLoggedIn: true,
+        }))
+      }
+      else alert('Wrong token')
+    } catch(err){
+      alert(err.message)
+    }
+    
   }
-
-  // const handleLogin = async () => {
-  //   await firebase.signIn(email,password);
-  // };
 
   const handleSignUp = async () => {
-    await firebase.signUp(email, password);
+    const tk = await firebase.signUp(email, password);
+    setTk(tk);
+    
   };
-  // const hangdleLogout = () => {
-  //   fire.auth().signOut();
-  // };
-
-  
-
-
-
-  const UserInfo = async () => {
-
-  }
-
 
   return(
-    <View  style={styles.Container}>
-      <View style={styles.LogoSpace}>
-          <Image
-          source = {require('../assets/cute-petshop-logo-with-cat-dog_454510-56.jpg')}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{flex: 1}}
+    >
+      <View  style={styles.Container}>
+        <View style={styles.LogoSpace}>
+            <Image
+            source = {require('../assets/cute-petshop-logo-with-cat-dog_454510-56.jpg')}
+            style={styles.LogoStyle}
+            />
+
+          </View>
+        <View style={styles.SignUpSpace}>
+          <TextInput
+            style={styles.UserInput}
+            placeholder=' Enter your Email...'
+            onChangeText={email => setEmail(email.trim())}
+            value={email}
+          />
+          <TextInput
+            style={styles.UserInput}
+            placeholder='Password'
+            secureTextEntry={true}
+            onChangeText={password => setPassword(password.trim())}
+            value={password}
           />
 
-        </View>
-      <View style={styles.SignUpSpace}>
-        <TextInput
-          style={styles.UserInput}
-          placeholder=' Enter your Email...'
-          onChangeText={email => setEmail(email.trim())}
-          value={email}
-        />
-        <TextInput
-          style={styles.UserInput}
-          placeholder='Password'
-          secureTextEntry={true}
-          onChangeText={password => setPassword(password.trim())}
-          value={password}
-        />
-
-            <TouchableOpacity style={styles.SignUpBottom} onPress={handleSignUp}>
-              <Text> Sign Up </Text>
-            </TouchableOpacity>
-            <View style={styles.LoginSpace}>
-              <Text> Already have an account? </Text>
-              <TouchableOpacity onPress={() => navigation.navigate("Sign in")}><Text style={styles.LoginText}>Login</Text></TouchableOpacity>
-            </View>
+              <TouchableOpacity style={styles.SignUpBottom} onPress={handleSignUp}>
+                <Text> Sign Up </Text>
+              </TouchableOpacity>
+              <View style={styles.LoginSpace}>
+                <Text> Already have an account? </Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Sign in")}><Text style={styles.LoginText}>Login</Text></TouchableOpacity>
+              </View>
+              
             
-          
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -83,12 +96,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9e3bd',
   },
   LogoSpace:{
-    flex: 3,
+    flex: 5,
     marginLeft: 17,
   },
+  LogoStyle: {
+    height:'100%',
+    width: '100%'
+  },
   SignUpSpace: {
-    flex: 7,
-    justifyContent: 'center',
+    flex: 5,
+    //justifyContent: 'center',
     alignItems: 'center'
   },
   UserInput: {
@@ -109,10 +126,12 @@ const styles = StyleSheet.create({
     width:'20%',
     alignItems:'center',
     justifyContent: 'center',
-    backgroundColor: '#efb65b'
+    backgroundColor: '#efb65b',
+    marginTop:30,
   },
   LoginSpace:{
     flexDirection: 'row',
+    marginTop:30
   },
   LoginText:{
     color: '#76c4d7'
