@@ -4,8 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 
 import SigninScreen from '../screens/SigninScreen'
 import SignupScreen from '../screens/SignupScreen';
-import HomeScreen from '../screens/HomeScreen';
-import DetailsScreen from '../screens/DetailsScreen'
+import ResetPasswordScreen from '../screens/ResetPasswordScreen';
 export default AuthStackScreens = () => {
   const AuthStack = createStackNavigator()
 
@@ -16,8 +15,7 @@ export default AuthStackScreens = () => {
       }}>
         <AuthStack.Screen name="Sign in" component={SigninScreen} />
         <AuthStack.Screen name="Sign up" component={SignupScreen} />
-        {/* <AuthStack.Screen name="Home" component={HomeScreen} />
-        <AuthStack.Screen name="Details" component={DetailsScreen} /> */}
+        <AuthStack.Screen name="Reset Password" component={ResetPasswordScreen} />
       </AuthStack.Navigator>
   )
 }

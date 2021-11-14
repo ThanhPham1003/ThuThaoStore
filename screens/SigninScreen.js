@@ -39,9 +39,9 @@ export default function SigninScreen ({navigation})  {
         isLoggedIn: true,
       }))
     }
-    else alert('Wrong token')
+    else Alert.alert('Wrong token')
   } catch(err){
-    alert('Cannot connect to Server')
+    Alert.alert(err);
   }
     
   }
@@ -89,7 +89,12 @@ export default function SigninScreen ({navigation})  {
               <View style={styles.SignUpSpace}>
                 <Text> Don't have an account? </Text>
                 <TouchableOpacity onPress={() => navigation.navigate("Sign up")}><Text style={styles.SignUpText}>Sign Up</Text></TouchableOpacity>
+                
               </View>
+              <View style={styles.SignUpSpace}>
+                <Text> Forgot Password? </Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Reset Password")}><Text style={styles.SignUpText}>Reset Password</Text></TouchableOpacity>
+              </View>  
               
             
         </View>
@@ -117,8 +122,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   UserInput: {
-    height: 40,
-    width: '60%',
+    height: 50,
+    width: '70%',
     borderWidth: 5,
     borderColor: '#efb65c',
     borderRadius: 20,

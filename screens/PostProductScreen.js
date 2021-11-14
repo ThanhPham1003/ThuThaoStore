@@ -1,8 +1,10 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Button } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Button,Image, KeyboardAvoidingView } from 'react-native';
+import { TokenContext, TokenProvider } from '../context/TokenContext';
 import * as ImagePicker from 'expo-image-picker';
 import API from '../config/environmentVariables';
+import {MaterialIcons} from '@expo/vector-icons'
 export default function PostProductScreen(props){
     const {navigation} = props;
     const [name, setName] = useState('');
@@ -10,7 +12,7 @@ export default function PostProductScreen(props){
     const [colorProduct, setColorProduct] =  useState('');
     const [price, setPrice] = useState('');
     const [image, setImage] = useState(null);
-    
+    const [token, setToken] = useContext(TokenContext);
     useEffect(() => {
         (async () => {
           if (Platform.OS !== 'web') {
@@ -32,6 +34,7 @@ export default function PostProductScreen(props){
   
         if (!result.cancelled) {
             setImage(result.uri);
+            console.log("33333", result.uri)
         }
     };
     
@@ -50,8 +53,14 @@ export default function PostProductScreen(props){
             name: image,
           });
 
-        const res = await axios.post( API.BASE_URL + "products", data)
-        alert("Posted successfully");
+        const res = await axios.post( API.BASE_URL + "products/allproducts", data, {
+            headers: {
+                authorization: "Thanh " + token.token,
+            }
+
+        });
+        console.log("444444", res.data);
+        alert(res.data);
         setName('');
         setAge('');
         setImage(null);
@@ -64,55 +73,95 @@ export default function PostProductScreen(props){
     }
 
     return(
-        <View style ={styles.Container}>
-            <TextInput
-                style={styles.ProductInput}
-                placeholder='Name'
-                onChangeText={name => setName(name)}
-                value={name}
-            />
-            <TextInput
-                style={styles.ProductInput}
-                placeholder='Age'
-                onChangeText={age => setAge(age)}
-                value={age}
-            />
-            <TextInput
-                style={styles.ProductInput}
-                placeholder='Color'
-                onChangeText={colorProduct => setColorProduct(colorProduct)}
-                value={colorProduct}
-            />
-            <TextInput
-                style={styles.ProductInput}
-                placeholder='Price'
-                onChangeText={price => setPrice(price)}
-                value={price}
-            />
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{flex: 1}}
+        >
+            <View style ={styles.Container}>
+                <TouchableOpacity style={styles.AddImageSpace} onPress={uploadImage}>
+                    {image ?
+                    <Image style={styles.ProductImage} source={{uri: image}} />
+                    :
+                    <>
+                    <MaterialIcons name="add-a-photo" size={60}/>
+                    <Text> Select a photo for your Pet</Text>
+                    </>
+                }
+                </TouchableOpacity>
+                <TextInput
+                    style={styles.ProductInput}
+                    placeholder='Name'
+                    onChangeText={name => setName(name)}
+                    value={name}
+                />
+                <TextInput
+                    style={styles.ProductInput}
+                    placeholder='Age'
+                    onChangeText={age => setAge(age)}
+                    value={age}
+                />
+                <TextInput
+                    style={styles.ProductInput}
+                    placeholder='Color'
+                    onChangeText={colorProduct => setColorProduct(colorProduct)}
+                    value={colorProduct}
+                />
+                <TextInput
+                    style={styles.ProductInput}
+                    placeholder='Price'
+                    onChangeText={price => setPrice(price)}
+                    value={price}
+                />
 
-            <TouchableOpacity style={styles.SendBot} onPress={() => uploadImage()}>
-                <Text> Select from Gallery </Text>
-            </TouchableOpacity>
+                
 
-            <TouchableOpacity style={styles.SendBot} onPress={() => sendData()}>
-                <Text> Send </Text>
-            </TouchableOpacity>
-        </View>  
+                <TouchableOpacity style={styles.SendBot} onPress={() => sendData()}>
+                    <Text> Send </Text>
+                </TouchableOpacity>
+            </View>  
+        </KeyboardAvoidingView>
     )
 }
 const styles = StyleSheet.create({
     Container: {
         flex:1,
+        //justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f9e3bd',
+    },
+    AddImageSpace:{
+        borderWidth: 3,
+        height: '40%',
+        width: '90%',
+        borderRadius: 10,
+        backgroundColor: '#e7eaed',
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 30,
+    },
+    ProductImage:{
+        width: '90%',
+        height:'90%'
     },
     ProductInput: {
-        height: 40,
-        width: '60%',
-        borderWidth: 2,
-        borderColor: '#ccc',
+        height: 50,
+        width: '70%',
+        borderWidth: 5,
+        borderColor: '#efb65c',
+        borderRadius: 20,
         margin: 10,
+        padding: 10,
     },
+    
     SendBot: {
-        backgroundColor: 'red',
-        borderWidth: 3
+        borderColor: '#efb65c',
+        borderWidth: 2,
+        borderRadius: 10,
+        height: 30,
+        width:'20%',
+        alignItems:'center',
+        justifyContent: 'center',
+        backgroundColor: '#efb65b',
+        marginTop:30,
     }
 })

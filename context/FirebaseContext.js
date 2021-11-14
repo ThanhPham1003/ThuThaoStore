@@ -4,6 +4,7 @@ import firebase from "firebase";
 import 'firebase/auth';
 import config from '../config/fire';
 import { TokenContext, TokenProvider } from '../context/TokenContext';
+import { Alert } from "react-native";
 //const [_, setToken] = useContext(TokenContext)
 const FirebaseContext = createContext()
 
@@ -73,6 +74,15 @@ const Firebase = {
     return await firebase.auth().signOut();
     
   },
+
+  resetPassword: async (password) => {
+    const reset = await firebase.auth().sendPasswordResetEmail(password).then(() =>{
+      Alert.alert("Please check your email");
+    }).catch((err) => {
+      Alert.alert(err)
+    })
+  }
+
 }
 
 const FirebaseProvider = (props) => {

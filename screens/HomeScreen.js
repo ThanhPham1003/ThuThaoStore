@@ -24,17 +24,18 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
   }, [])
 
   const fetchData = async (token) => {
-    // const req = await axios.post("http://localhost:5000/users", {
-    //     headers: {
-    //       authorization: "Thanh " + token,
-    //     }
-    // });
-    // console.log(req.data);
-      const res = await axios.get(API.BASE_URL + "products");
-      setProducts(res.data);
-      //console.log(res.data.nam);
-      setFilterProducts(res.data);
+    
+
+      const res2 = await axios.get(API.BASE_URL + "products/allproducts",{
+        headers: {
+          authorization: "Thanh " + token.token,
+        }
+      });
+      //console.log("333333" , res2)
+      setProducts(res2.data);
+      setFilterProducts(res2.data);
       //console.log("555555", res.data);
+ 
   }
 
   const logOut = async () =>{
