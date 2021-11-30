@@ -30,10 +30,10 @@ const Firebase = {
         case "auth/invalid-email":
         case "auth/user-disaled":
         case "auth/user-not-found":
-          console.log(err.message);
+          Alert.alert(err.message);
           break;
         case "auth/wrong-password":
-          console.log(err.message);
+          Alert.alert(err.message);
           break;  
       }
     })
@@ -54,10 +54,10 @@ const Firebase = {
         switch(err.code){
           case "auth/email-already-in-use":
           case "auth/invalid-email":
-            console.log(err.message);
+            Alert.alert(err.message);
             break;
           case "auth/weak-password":
-            console.log(err.message);
+            Alert.alert(err.message);
             break;  
         }
       })
@@ -66,6 +66,7 @@ const Firebase = {
         return user;
       }catch(err)
       {
+        Alert.alert(err.message)
         return {message: err}
       }
   },
@@ -81,8 +82,26 @@ const Firebase = {
     }).catch((err) => {
       Alert.alert(err)
     })
-  }
+  },
 
+  reAuthenticate: (currentPassword) => {
+    const user = Firebase.getCurrentUser();
+    const cred = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+    return user.reauthenticateWithCredential(cred)
+  },
+  changePassword: async (currentPassword, newPassword) => {
+    const cp = Firebase.reAuthenticate(currentPassword).then(() => {
+      const user = Firebase.getCurrentUser();
+      user.updatePassword(newPassword).then(() => {
+        Alert.alert("Password was changed");
+      }).catch((err) => {
+        Alert.alert(err.message);
+      });
+    }).catch((err) => {
+      Alert.alert(err.message);
+    });
+    return cp;
+  }
 }
 
 const FirebaseProvider = (props) => {

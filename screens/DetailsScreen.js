@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text,StyleSheet, TouchableOpacity, Image } from 'react-native';
 import axios from "axios";
 import { TextInput } from "react-native-gesture-handler";
+import { TokenContext, TokenProvider } from '../context/TokenContext';
 import API from '../config/environmentVariables';
 
 export default DetailsScreen = ({route,navigation}) => {
@@ -12,6 +13,7 @@ export default DetailsScreen = ({route,navigation}) => {
     const [newAge, setNewAge] = useState('');
     const [newColor, setNewColor] = useState('');
     const [newPrice, setNewPrice] = useState('');
+    const [token, setToken] = useContext(TokenContext);
     useEffect(() => {
         fetchData();
     },[])
@@ -25,7 +27,11 @@ export default DetailsScreen = ({route,navigation}) => {
     }, [product])
     const fetchData = async () => {
         const add = API.BASE_URL + "products/" + id;
-        const res  = await axios.get(add);
+        const res  = await axios.get(add,{
+            headers: {
+                authorization: "Bearer " + token.token,
+              }
+        });
         setProduct(res.data);
     }
     const deleteData = async () => {
@@ -62,29 +68,36 @@ export default DetailsScreen = ({route,navigation}) => {
                 {isEditing ? (
                 <View>
                     <View style={styles.ProductTittle}>
-                        <TextInput 
+                        <TextInput style={styles.NameEditInput}
                         value= {newName}
                         onChangeText={(text) => setNewName(text)} />
                     </View>
                     <View style={styles.ProductSpecs}>
-                        <Text style={styles.ProductSpecsText}>Age: </Text>
-                        <TextInput 
-                        value= {newAge}
-                        onChangeText={(text) => setNewAge(text)} />
-                        <Text style={styles.ProductSpecsText}>Color:  </Text>
-                        <TextInput 
-                        value= {newColor}
-                        onChangeText={(text) => setNewColor(text)} />
-                        <Text style={styles.ProductSpecsText}>Price: </Text>
-                        <TextInput 
-                        value= {newPrice}
-                        keyboardType={'decimal-pad'}
-                        onChangeText={(text) => setNewPrice(text)} />
-                    {/* <Text style={styles.ProductSpecsText}>Date submit: {product.date}</Text> */}
+                        <View style={styles.EditInputSpace}>
+                            <Text style={styles.ProductSpecsText}>Age: </Text>
+                            <TextInput style={styles.EditInput}
+                            value= {newAge}
+                            onChangeText={(text) => setNewAge(text)} />
+                        </View>
+                        <View style={styles.EditInputSpace}>
+                            <Text style={styles.ProductSpecsText}>Color:  </Text>
+                            <TextInput style={styles.EditInput}
+                            value= {newColor}
+                            onChangeText={(text) => setNewColor(text)} />
+                        </View>
+                        <View style={styles.EditInputSpace}>
+                            <Text style={styles.ProductSpecsText}>Price: </Text>
+                            <TextInput style={styles.EditInput}
+                            value= {newPrice}
+                            keyboardType={'decimal-pad'}
+                            onChangeText={(text) => setNewPrice(text)} />
+                        </View>
                     </View>
-                    <TouchableOpacity style={styles.DeleteButton} onPress={updateData}>
-                        <Text> Save </Text>
-                    </TouchableOpacity>
+                    <View style={styles.ButtonSpace}>
+                        <TouchableOpacity style={styles.ButtonStyle} onPress={updateData}>
+                            <Text> Save </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 ) : (
                 <View>
@@ -101,13 +114,14 @@ export default DetailsScreen = ({route,navigation}) => {
                     </View>
                     
                 
-
-                    <TouchableOpacity style={styles.DeleteButton} onPress={deleteData}>
-                        <Text> Delete </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.DeleteButton} onPress={() => setIsEditing(true)}>
-                        <Text> Edit</Text>
-                    </TouchableOpacity>
+                    <View style={styles.ButtonSpace}>
+                        <TouchableOpacity style={styles.ButtonStyle} onPress={deleteData}>
+                            <Text> Delete </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.ButtonStyle} onPress={() => setIsEditing(true)}>
+                            <Text> Edit</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             )}
             </View>    
@@ -144,6 +158,7 @@ const styles = StyleSheet.create({
     },
     ProductTittle:{
         alignItems: "center",
+
     },
     ProductTittleText:{
         fontSize: 28,
@@ -152,6 +167,21 @@ const styles = StyleSheet.create({
     ProductSpecs:{
         marginLeft: 20,
     },
+    EditInputSpace:{
+        flexDirection:'row'
+    },
+    EditInput:{
+        borderBottomWidth: 1,
+        borderBottomColor: 'black',
+        height: '50%',
+        width: '40%',
+        marginTop: 20,
+        marginLeft:10,
+    },
+    NameEditInput:{
+        fontSize: 28,
+        color: '#0C3674',
+    },
     ProductSpecsText:{
         fontSize: 20,
         marginTop: 20,
@@ -159,6 +189,25 @@ const styles = StyleSheet.create({
     DeleteButton:{
         borderWidth: 3,
         margin:20,
-    }
+    },
+    ButtonSpace:{
+        flexDirection: 'row',
+        alignItems:'center',
+        justifyContent: 'center',
+
+    },
+    ButtonStyle:{
+        borderColor: '#efb65c',
+        borderWidth: 2,
+        borderRadius: 10,
+        height: 40,
+        width:130,
+        alignItems:'center',
+        justifyContent: 'center',
+        backgroundColor: '#efb65b',
+        margin:30,
+    },
+
+    
 
   })

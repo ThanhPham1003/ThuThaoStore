@@ -29,7 +29,7 @@ export default function SigninScreen ({navigation})  {
     try{
     const res = await axios.get(API.BASE_URL, {
         headers: {
-          authorization: "Thanh " + tk,
+          authorization: "Bearer " + tk,
         }
     });
     if(res.data === 'Verified')

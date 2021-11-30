@@ -52,10 +52,10 @@ export default function PostProductScreen(props){
             type: 'image',
             name: image,
           });
-
+        console.log(" 66666", data)
         const res = await axios.post( API.BASE_URL + "products/allproducts", data, {
             headers: {
-                authorization: "Thanh " + token.token,
+                authorization: "Bearer " + token.token,
             }
 
         });

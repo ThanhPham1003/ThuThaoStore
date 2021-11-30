@@ -28,24 +28,17 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
       const res2 = await axios.get(API.BASE_URL + "products/allproducts",{
         headers: {
-          authorization: "Thanh " + token.token,
+          authorization: "Bearer " + token.token,
         }
       });
       //console.log("333333" , res2)
       setProducts(res2.data);
       setFilterProducts(res2.data);
-      //console.log("555555", res.data);
+      //console.log("555555", res2.data);
  
   }
 
-  const logOut = async () =>{
 
-    await firebase.logOut();
-    setToken({
-      token: "",
-      isLoggedIn: false,
-    });
-  }
 
   const searchFilter = (text) => {
     if(text) {
@@ -89,9 +82,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
           renderItem={(item) => <ProductCard data={item} navigation={navigation}/> }
           keyExtractor={(item, index) => index.toString()}
         />
-      <TouchableOpacity  onPress={logOut}>
-        <Text> Logout </Text>
-      </TouchableOpacity>
     </View>
   )
 }

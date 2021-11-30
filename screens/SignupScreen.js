@@ -1,13 +1,13 @@
 
 import React, { useContext, useEffect, useState } from 'react';
-import {Text, StyleSheet, View, TextInput, TouchableOpacity,Image,KeyboardAvoidingView} from 'react-native';
+import {Text, StyleSheet, View, TextInput, TouchableOpacity,Image,KeyboardAvoidingView, ActivityIndicator} from 'react-native';
 import {MaterialIcons} from '@expo/vector-icons'
 import {FirebaseContext} from '../context/FirebaseContext'
 import { TokenContext, TokenProvider } from '../context/TokenContext';
 import * as ImagePicker from 'expo-image-picker';
 import API from '../config/environmentVariables'
 import axios from "axios";
-
+import Modal from 'react-native-modal';
 
 export default function SignupScreen ({navigation})  {
   const [email, setEmail] = useState('');
@@ -18,6 +18,7 @@ export default function SignupScreen ({navigation})  {
   const firebase = useContext(FirebaseContext);
   const [token, setToken] = useContext(TokenContext);
   const [tk, setTk] = useState(null);
+  const [loaded, setLoaded] = useState(true);
   useEffect(() => {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -28,7 +29,13 @@ export default function SignupScreen ({navigation})  {
       }
     })();
   }, []);
-
+  useEffect(()=>{
+    console.log("33333", validateEmail(email))
+  },[email])
+  const validateEmail = (email) => {
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -43,9 +50,12 @@ export default function SignupScreen ({navigation})  {
     }
 };
 const sendData = async(tk) =>{
+
+  const uid = firebase.getCurrentUser().uid;
+  console.log("123456", uid);
   const data  = new FormData()
   data.append('email',email);
-  data.append('uid', '123456');
+  data.append('uid', uid);
   data.append('name', name);
   data.append('age', age);
   data.append('userImage', {
@@ -56,12 +66,21 @@ const sendData = async(tk) =>{
 
   const res = await axios.post( API.BASE_URL + "users", data, {
       headers: {
-          authorization: "Thanh " + tk,
+          authorization: "Bearer " + tk,
       }
 
   });
-  console.log("444444", res.data);
-  alert(res.data);
+  if(res.data === 'Successfully')
+    {
+      setLoaded(true);
+      setToken(({
+        token: tk,
+        isLoggedIn: true,
+      }))
+
+    }
+  
+  
   setName('');
   setAge('');
   setImage(null);
@@ -74,10 +93,11 @@ const uploadImage = async () => {
 
 
 
+
   const handleSignUp = async () => {
+    setLoaded(false);
     const tk = await firebase.signUp(email, password);
     sendData(tk);
-    
   };
 
   return(
@@ -86,6 +106,14 @@ const uploadImage = async () => {
       style={{flex: 1}}
     >
       <View  style={styles.Container}>
+        <Modal
+        animationType="slide"
+        visible={!loaded}>
+          <View style={styles.LoadingStyle}>
+            <ActivityIndicator size="large" color="#000" />
+            <Text> Wait a minute...</Text>
+          </View>
+        </Modal>  
         <TouchableOpacity style={styles.AddImageSpace} onPress={uploadImage}>
                     {image ?
                     <Image style={styles.ProductImage} source={{uri: image}} />
@@ -144,7 +172,25 @@ const styles = StyleSheet.create({
     flex:1,
     backgroundColor: '#f9e3bd',
   },
-  
+  LoadingStyle:{
+    margin: 10,
+    backgroundColor: "#efb65b",
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#fff",
+    shadowOffset:{
+      width: 0,
+      height:2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius:4,
+    elevation: 5
+  },
+  ModalStyle:{
+    height:'40%',
+    width: '80%',
+  },
   AddImageSpace:{
     borderWidth: 3,
     height: '40%',
