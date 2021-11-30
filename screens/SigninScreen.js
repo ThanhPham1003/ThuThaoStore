@@ -62,7 +62,7 @@ export default function SigninScreen ({navigation})  {
       <View  style={styles.Container}>
         <View style={styles.LogoSpace}>
           <Image
-          source = {require('../assets/cute-petshop-logo-with-cat-dog_454510-56.jpg')}
+          source = {require('../assets/thuthaostore.jpg')}
           style={styles.LogoStyle}
           />
 
@@ -106,11 +106,10 @@ export default function SigninScreen ({navigation})  {
 const styles = StyleSheet.create({
   Container: {
     flex:1,
-    backgroundColor: '#f9e3bd',
+    backgroundColor: '#ffffff',
   },
   LogoSpace:{
     flex: 5,
-    marginLeft: 17,
   },
   LogoStyle: {
     height:'100%',
@@ -125,7 +124,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: '70%',
     borderWidth: 5,
-    borderColor: '#efb65c',
+    borderColor: '#f5ceb2',
     borderRadius: 20,
     margin: 10,
     padding: 10,
@@ -133,14 +132,14 @@ const styles = StyleSheet.create({
   },
 
   LoginBottom:{
-    borderColor: '#efb65c',
+    borderColor: '#f5ceb2',
     borderWidth: 2,
     borderRadius: 10,
     height: 30,
     width:'20%',
     alignItems:'center',
     justifyContent: 'center',
-    backgroundColor: '#efb65b',
+    backgroundColor: '#f5ceb2',
     marginTop:30,
   },
   SignUpSpace:{
