@@ -8,9 +8,10 @@ import {MaterialIcons} from '@expo/vector-icons'
 export default function PostProductScreen(props){
     const {navigation} = props;
     const [name, setName] = useState('');
-    const [age, setAge] = useState('');
-    const [colorProduct, setColorProduct] =  useState('');
+    const [code, setCode] = useState('');
+    const [orderquantity, setOrderQuantity] =  useState('');
     const [price, setPrice] = useState('');
+    const [daysubmitted, setDaysubmitted] = useState('');
     const [image, setImage] = useState(null);
     const [token, setToken] = useContext(TokenContext);
     useEffect(() => {
@@ -44,15 +45,16 @@ export default function PostProductScreen(props){
         
         data.append('uid', '123456');
         data.append('name', name);
-        data.append('age', age);
-        data.append('color', colorProduct);
         data.append('price', price);
+        data.append('code', code);
+        data.append('orderquantity', orderquantity);
+        data.append('daysubmitted', daysubmitted)
         data.append('productImage', {
             uri: image,
             type: 'image',
             name: image,
           });
-        console.log(" 66666", data)
+
         const res = await axios.post( API.BASE_URL + "products/allproducts", data, {
             headers: {
                 authorization: "Bearer " + token.token,
@@ -62,10 +64,11 @@ export default function PostProductScreen(props){
         console.log("444444", res.data);
         alert(res.data);
         setName('');
-        setAge('');
-        setImage(null);
+        setDaysubmitted('');
         setPrice('');
-        setColorProduct('');
+        setCode('');
+        setOrderQuantity('');
+        setImage(null);
     }
 
     const uploadImage = async () => {
@@ -84,7 +87,7 @@ export default function PostProductScreen(props){
                     :
                     <>
                     <MaterialIcons name="add-a-photo" size={60}/>
-                    <Text> Select a photo for your Pet</Text>
+                    <Text> Select a photo for your Product</Text>
                     </>
                 }
                 </TouchableOpacity>
@@ -96,23 +99,28 @@ export default function PostProductScreen(props){
                 />
                 <TextInput
                     style={styles.ProductInput}
-                    placeholder='Age'
-                    onChangeText={age => setAge(age)}
-                    value={age}
-                />
-                <TextInput
-                    style={styles.ProductInput}
-                    placeholder='Color'
-                    onChangeText={colorProduct => setColorProduct(colorProduct)}
-                    value={colorProduct}
-                />
-                <TextInput
-                    style={styles.ProductInput}
                     placeholder='Price'
                     onChangeText={price => setPrice(price)}
                     value={price}
                 />
-
+                <TextInput
+                    style={styles.ProductInput}
+                    placeholder='Code'
+                    onChangeText={code => setCode(code)}
+                    value={code}
+                />
+                < TextInput
+                   style={styles.ProductInput}
+                    placeholder='Order Quantity'
+                    onChangeText={orderquantity => setOrderQuantity(orderquantity)}
+                    value={orderquantity}
+                />
+                < TextInput
+                   style={styles.ProductInput}
+                    placeholder='Day Submitted'
+                    onChangeText={daysubmitted => setDaysubmitted(daysubmitted)}
+                    value={daysubmitted}
+                />
                 
 
                 <TouchableOpacity style={styles.SendBot} onPress={() => sendData()}>
@@ -127,12 +135,12 @@ const styles = StyleSheet.create({
         flex:1,
         //justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#f9e3bd',
+        backgroundColor: '#f5ceb2',
     },
     AddImageSpace:{
         borderWidth: 3,
-        height: '40%',
-        width: '90%',
+        height: '25%',
+        width: '70%',
         borderRadius: 10,
         backgroundColor: '#e7eaed',
         justifyContent: 'center',
@@ -148,9 +156,11 @@ const styles = StyleSheet.create({
         width: '70%',
         borderWidth: 5,
         borderColor: '#efb65c',
+        backgroundColor: '#e7eaed',
         borderRadius: 20,
         margin: 10,
         padding: 10,
+        
     },
     
     SendBot: {

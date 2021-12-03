@@ -5,7 +5,7 @@ import {Text, StyleSheet, View, TextInput, TouchableOpacity, Image, Alert, Keybo
 import {FirebaseContext} from '../context/FirebaseContext'
 import { TokenContext, TokenProvider } from '../context/TokenContext';
 import API from '../config/environmentVariables'
-import axios from "axios";
+import axios from 'axios';
 
 export default function SigninScreen ({navigation})  {
 
@@ -26,22 +26,25 @@ export default function SigninScreen ({navigation})  {
   },[tk])
 
   const fetchData = async (token) => {
+    const add = API.BASE_URL 
     try{
-    const res = await axios.get(API.BASE_URL, {
+    const res = await axios.get(add, {
         headers: {
           authorization: "Bearer " + tk,
         }
     });
+    console.log("23232", res.data)
     if(res.data === 'Verified')
     {
       setToken(({
         token: tk,
         isLoggedIn: true,
+        isChanged: false
       }))
     }
     else Alert.alert('Wrong token')
   } catch(err){
-    Alert.alert(err);
+    console.log("22222", err);
   }
     
   }
@@ -50,6 +53,8 @@ export default function SigninScreen ({navigation})  {
   const handleLogin = async () => {
     const tk = await firebase.signIn(email,password);
     setTk(tk);
+    //console.log("123 ", tk)
+    
   };
 
 
@@ -132,7 +137,6 @@ const styles = StyleSheet.create({
   },
 
   LoginBottom:{
-    borderColor: '#f5ceb2',
     borderWidth: 2,
     borderRadius: 10,
     height: 30,

@@ -17,10 +17,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
   const [filterProducts, setFilterProducts] = useState([]);
   const [search, setSearch] = useState('');
   useEffect(() => {
-    if(token)
-    {
       fetchData(token);
-    }
   }, [])
 
   const fetchData = async (token) => {
@@ -35,6 +32,11 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
       setProducts(res2.data);
       setFilterProducts(res2.data);
       //console.log("555555", res2.data);
+      setToken(({
+        token: tk,
+        isLoggedIn: true,
+        isChanged: false,
+      }))
  
   }
 
@@ -89,7 +91,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
     Container: {
       // justifyContent: 'center',
       //alignItems: 'center',
-      backgroundColor:'#f9e3bd',
+      backgroundColor:'#f5ceb2',
       flex:1,
       
     },
@@ -105,40 +107,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
       margin:10,
     },
 
-    // HomeTittle:{
-    //   fontSize: 64,
-    //   fontWeight: "200",
-    //   textAlign: 'center',
-    // }
-    ProductContainer:{
-      flexDirection:'row',
-      marginTop: 20,
-      height: 120,
-      width: ' 90%',
-      borderRadius: 10,
-      backgroundColor:  '#FFFFFF',
-    },
-    ProductImage:{
-      width:100,
-      height: '80%',
-      borderRadius: 20,
-      marginTop: 12,
-      marginLeft: 10,
-    },
-    ProductTittleAndInfo:{
-      flexDirection: 'column',
-    },
-    ProductTittle:{
-      marginLeft: 80,
-      marginTop: 10,
-    },
-    ProductTittleText:{
-      color: '#0C3674',
-      fontSize:  16,
-    },
-    ProductInfo:{
-      marginLeft: 20,
-      marginTop: 10,
-    }
+    
   })
 

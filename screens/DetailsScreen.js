@@ -10,19 +10,24 @@ export default DetailsScreen = ({route,navigation}) => {
     const [product, setProduct] = useState({});
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState('');
-    const [newAge, setNewAge] = useState('');
-    const [newColor, setNewColor] = useState('');
     const [newPrice, setNewPrice] = useState('');
+    const [newCode, setNewCode] = useState('');
+    const [newOrderQuantity, setNewOrderQuantity] = useState('');
+    const [newDaySubmitted, setNewDaySubmitted] = useState('');
+    const [image, setImage] = useState('');
     const [token, setToken] = useContext(TokenContext);
     useEffect(() => {
         fetchData();
     },[])
 
     useEffect(() => {
-        const {name = '', age = '', color = '', price = ''} = product
+        const {name = '', price = '', code = '', orderquantity = '', daysubmitted= ''} = product
+        
+
         setNewName(name);
-        setNewAge(age);
-        setNewColor(color);
+        setNewCode(code);
+        setNewOrderQuantity(orderquantity);
+        setNewDaySubmitted(daysubmitted);
         setNewPrice(price.toString())
     }, [product])
     const fetchData = async () => {
@@ -33,20 +38,28 @@ export default DetailsScreen = ({route,navigation}) => {
               }
         });
         setProduct(res.data);
+        const image = API.BASE_URL + res.data.url; 
+        let path2 = image.replace(/\\/g, "/");
+        setImage(path2)
     }
     const deleteData = async () => {
         const add = API.BASE_URL + "products/" + id;
-        const res = await axios.delete(add);
-        navigation.goBack();
+        const res = await axios.delete(add, {
+            headers: {
+                authorization: "Bearer " + token.token,
+              }
+        });
+        navigation.navigate('Thu Thao Store');
     }
     const updateData = async () => {
         const add = API.BASE_URL + "products/" + id;
         const res = await axios.patch(add, {
             headers: {
                 name: newName,
-                age: newAge,
-                color: newColor,
                 price: newPrice,
+                code: newCode,
+                orderquantity: newOrderQuantity,
+                daysubmitted: newDaySubmitted,
             },
         });
         fetchData();
@@ -60,7 +73,7 @@ export default DetailsScreen = ({route,navigation}) => {
         <View style={styles.Container}>
             <View style={styles.ProductPhotoSpace}>
                 <Image 
-                 source = {{uri: product.url}}   
+                 source = {{uri: image}}   
                  style={styles.ProductPhoto}
                 />
             </View>
@@ -74,16 +87,22 @@ export default DetailsScreen = ({route,navigation}) => {
                     </View>
                     <View style={styles.ProductSpecs}>
                         <View style={styles.EditInputSpace}>
-                            <Text style={styles.ProductSpecsText}>Age: </Text>
+                            <Text style={styles.ProductSpecsText}>Code: </Text>
                             <TextInput style={styles.EditInput}
-                            value= {newAge}
-                            onChangeText={(text) => setNewAge(text)} />
+                            value= {newCode}
+                            onChangeText={(text) => setNewCode(text)} />
                         </View>
                         <View style={styles.EditInputSpace}>
-                            <Text style={styles.ProductSpecsText}>Color:  </Text>
+                            <Text style={styles.ProductSpecsText}>Quantity:  </Text>
                             <TextInput style={styles.EditInput}
-                            value= {newColor}
-                            onChangeText={(text) => setNewColor(text)} />
+                            value= {newOrderQuantity}
+                            onChangeText={(text) => setNewOrderQuantity(text)} />
+                        </View>
+                        <View style={styles.EditInputSpace}>
+                            <Text style={styles.ProductSpecsText}>Day Submitted:  </Text>
+                            <TextInput style={styles.EditInput}
+                            value= {newDaySubmitted}
+                            onChangeText={(text) => setNewDaySubmitted(text)} />
                         </View>
                         <View style={styles.EditInputSpace}>
                             <Text style={styles.ProductSpecsText}>Price: </Text>
@@ -106,10 +125,10 @@ export default DetailsScreen = ({route,navigation}) => {
 
                     </View>
                     <View style={styles.ProductSpecs}>
-                        <Text style={styles.ProductSpecsText}>Age: {product.age}</Text>
-                        <Text style={styles.ProductSpecsText}>Color: {product.color} </Text>
-                        <Text style={styles.ProductSpecsText}>Price: {product.price}$</Text>
-                        
+                        <Text style={styles.ProductSpecsText}>Price: {product.price}</Text>
+                        <Text style={styles.ProductSpecsText}>Code: {product.code} </Text>
+                        <Text style={styles.ProductSpecsText}>Quantity: {product.orderquantity}</Text>
+                        <Text style={styles.ProductSpecsText}>Day Submitted: {product.daysubmitted}</Text>
                         {/* <Text style={styles.ProductSpecsText}>Date submit: {product.date}</Text> */}
                     </View>
                     
@@ -131,7 +150,7 @@ export default DetailsScreen = ({route,navigation}) => {
 const styles = StyleSheet.create({
     Container: {
       flex:1,
-      backgroundColor: '#f9e3bd'
+      backgroundColor: '#f5ceb2'
     },
     ProductPhotoSpace:{
         //backgroundColor: 'yellow',

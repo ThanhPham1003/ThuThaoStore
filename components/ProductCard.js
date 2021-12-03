@@ -1,12 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text,StyleSheet, TouchableOpacity, Image } from 'react-native'
-import {FirebaseContext} from '../context/FirebaseContext'
+import {FirebaseContext} from '../context/FirebaseContext';
+import API from '../config/environmentVariables';
 
 export default ProductCard = (props) => {
     const {data, navigation}  = props
     const {item} = data;
+    const [image, setImage] = useState('');
     const [id, setID] = useState();
-    
+    useEffect(() => {
+      const url = API.BASE_URL + item.url;
+      let path2 = url.replace(/\\/g, "/");
+      setImage(path2)
+    })
+
+
     const details = (id) => {
 
         navigation.navigate('Details',{id})
@@ -15,7 +23,7 @@ export default ProductCard = (props) => {
     <View style={styles.Container}>
         <View style={styles.ProductContainer}>
           <Image
-          source = {{uri: item.url}}
+          source = {{uri: image}}
           style={styles.ProductImage} />
           <View style={styles.ProductTittleAndInfo}>
             <TouchableOpacity
@@ -25,8 +33,8 @@ export default ProductCard = (props) => {
               <Text style={styles.ProductTittleText}> {item.name} </Text>
             </TouchableOpacity>
             <View style={styles.ProductInfo}>
-                <Text> Age: {item.age}  </Text>
-                <Text> Color: {item.color} </Text>
+                <Text> Code: {item.code}  </Text>
+                <Text> Quantity: {item.orderquantity} </Text>
                 <Text> Price: {item.price} $ </Text>
             </View>
           </View>
