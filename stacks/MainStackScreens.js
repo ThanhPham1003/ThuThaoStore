@@ -7,6 +7,7 @@ import TabStackScreens from './TabStackScreens';
 import DetailsScreen from '../screens/DetailsScreen'
 import ListClientsScreen from '../screens/ListClientsScreen';
 import ClientScreen from '../screens/ClientScreen';
+import OrderScreen from '../screens/OrderScreen';
 export default MainStackScreens = () => {
   const MainStack = createStackNavigator()
   const screenOptions = {
@@ -25,6 +26,7 @@ export default MainStackScreens = () => {
         <MainStack.Screen name="Details" component={DetailsScreen} />
         <MainStack.Screen name="Client" component={ListClientsScreen} />
         <MainStack.Screen name="Client Details" component={ClientScreen} />
+        <MainStack.Screen name="Order" component={OrderScreen} />
         {/* <AuthStack.Screen name="Home" component={HomeScreen} />
         <AuthStack.Screen name="Details" component={DetailsScreen} /> */}
       </MainStack.Navigator>

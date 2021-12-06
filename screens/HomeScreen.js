@@ -32,12 +32,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
       setProducts(res2.data);
       setFilterProducts(res2.data);
       //console.log("555555", res2.data);
-      setToken(({
-        token: tk,
-        isLoggedIn: true,
-        isChanged: false,
-      }))
- 
+      
   }
 
 

@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { View, Text,StyleSheet, TouchableOpacity, Image } from 'react-native'
 import {FirebaseContext} from '../context/FirebaseContext';
 import API from '../config/environmentVariables';
-
+import AntDesign from 'react-native-vector-icons/AntDesign';
 export default ProductCard = (props) => {
     const {data, navigation}  = props
     const {item} = data;
@@ -15,9 +15,12 @@ export default ProductCard = (props) => {
     })
 
 
-    const details = (id) => {
+    const gotoDetails = (id) => {
 
-        navigation.navigate('Details',{id})
+      navigation.navigate('Details',{id})
+    }
+    const gotoOrder = (productName, productId) => {
+      navigation.navigate('Order', {productName,productId, navigation})
     }
     return (
     <View style={styles.Container}>
@@ -28,7 +31,7 @@ export default ProductCard = (props) => {
           <View style={styles.ProductTittleAndInfo}>
             <TouchableOpacity
              style={styles.ProductTittle}
-             onPress={() => details(item._id)}
+             onPress={() => gotoDetails(item._id)}
              >
               <Text style={styles.ProductTittleText}> {item.name} </Text>
             </TouchableOpacity>
@@ -38,13 +41,18 @@ export default ProductCard = (props) => {
                 <Text> Price: {item.price} $ </Text>
             </View>
           </View>
+          <View style ={styles.PlusBottom}>
+            <TouchableOpacity onPress={() => gotoOrder(item.name, item._id)}>
+              <AntDesign name='plussquare' size = '40' color='#efb65b'/>
+            </TouchableOpacity>
+          </View>
         </View>
     </View>  
     )
 }
 const styles = StyleSheet.create({
     Container: {
-      flex:1,
+      //flex:1,
       // justifyContent: 'center',
       alignItems: 'center',
       //backgroundColor: 'yellow'
@@ -55,6 +63,7 @@ const styles = StyleSheet.create({
     //   textAlign: 'center',
     // }
     ProductContainer:{
+      flex: 1,
       flexDirection:'row',
       marginTop: 20,
       height: 120,
@@ -63,6 +72,7 @@ const styles = StyleSheet.create({
       backgroundColor:  '#FFFFFF',
     },
     ProductImage:{
+      flex: 3,
       width:100,
       height: '80%',
       borderRadius: 20,
@@ -71,6 +81,7 @@ const styles = StyleSheet.create({
     },
     ProductTittleAndInfo:{
       flexDirection: 'column',
+      flex: 4,
     },
     ProductTittle:{
       marginLeft: 80,
@@ -83,5 +94,12 @@ const styles = StyleSheet.create({
     ProductInfo:{
       marginLeft: 20,
       marginTop: 10,
+    },
+    PlusBottom :{
+      flex: 3,
+      justifyContent: 'center',
+      alignItems: 'center'
+      //marginLeft: 0,
+      // marginTop: 50
     }
   })

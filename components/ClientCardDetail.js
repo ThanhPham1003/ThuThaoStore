@@ -3,16 +3,20 @@ import { View, Text,StyleSheet, TouchableOpacity, Image } from 'react-native'
 import {FirebaseContext} from '../context/FirebaseContext';
 import API from '../config/environmentVariables';
 
-export default ClientCard = (props) => {
-  const {data, navigation} = props
+export default ClientCardDetail = (props) => {
+  const {data, navigation, child} = props
   const {item} = data;
-  const details = (id) => {
-    navigation.navigate('Client Details',{id})
+  const details = (phone) => {
+    navigation.navigate('Client Details',{phone})
 }
+  const setInfo = () => {
+    child(item);
+  }
   return(
-    <View style = {styles.Container}>
+    <View style = {styles.Container} >
+      
       <View style={styles.InfoContainer}>
-        <TouchableOpacity onPress={() => details(item._id)}>
+        <TouchableOpacity onPress={() => details(item.phone)}>
           <Text style={styles.ClientTittleText}> {item.name} </Text>
         </TouchableOpacity>
         <Text style={styles.ClientInfoText}> {item.phone}</Text>
@@ -43,6 +47,6 @@ const styles = StyleSheet.create({
     marginLeft:10,
     marginTop: 10,
     color: '#0C3674',
-    fontSize:  15,
+    //fontSize:  15,
   },
 })

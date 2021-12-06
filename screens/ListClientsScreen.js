@@ -6,7 +6,7 @@ import { TokenContext, TokenProvider } from '../context/TokenContext'
 import { TextInput } from 'react-native-gesture-handler';
 import API from '../config/environmentVariables'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import ClientCard from '../components/ClientCard';
+import ClientCardDetail from '../components/ClientCardDetail';
 
 export default function ListClientsScreen(props){
   const {navigation} = props;
@@ -39,7 +39,7 @@ export default function ListClientsScreen(props){
       setClients(newData);
       setSearch(text);
     }else{
-      setClients(filterProducts);
+      setClients(filterClients);
       setSearch(text);
     }
   }
@@ -56,7 +56,7 @@ export default function ListClientsScreen(props){
       </View>
       <FlatList
       data={clients}
-      renderItem={(item) => <ClientCard data={item} navigation={navigation} />}
+      renderItem={(item) => <ClientCardDetail data={item} navigation={navigation} />}
       keyExtractor={(item, index) => index.toString()} />
     </View>
   )

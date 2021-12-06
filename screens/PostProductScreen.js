@@ -61,7 +61,6 @@ export default function PostProductScreen(props){
             }
 
         });
-        console.log("444444", res.data);
         alert(res.data);
         setName('');
         setDaysubmitted('');

@@ -2,9 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Button,Image, KeyboardAvoidingView, Alert } from 'react-native';
 import { TokenContext, TokenProvider } from '../context/TokenContext';
-import * as ImagePicker from 'expo-image-picker';
 import API from '../config/environmentVariables';
-import {MaterialIcons} from '@expo/vector-icons'
 export default function PostClientScreen(props){
     const {navigation} = props;
     const [name, setName] = useState('');
@@ -15,14 +13,7 @@ export default function PostClientScreen(props){
     const [token, setToken] = useContext(TokenContext);
     
     const sendData = async() => {
-        const data = new FormData()
 
-        data.append('name', name);
-        data.append('address', address);
-        data.append('link', link);
-        data.append('phone', phone);
-        data.append('deposit', deposit);
-        console.log("55555", data)
         const res = await axios.post( API.BASE_URL + "clients" ,{name: name, address: address, link: link, phone: phone, deposit: deposit}, {
             headers: {
                 authorization: "Bearer " + token.token,

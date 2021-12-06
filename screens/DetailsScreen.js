@@ -1,13 +1,16 @@
 import React, { useEffect, useState, useContext } from "react";
-import { View, Text,StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text,StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
 import axios from "axios";
 import { TextInput } from "react-native-gesture-handler";
 import { TokenContext, TokenProvider } from '../context/TokenContext';
 import API from '../config/environmentVariables';
+import ClientCardDetail from "../components/ClientCardDetail";
+import ClientCardOrdered from "../components/ClientCardOrdered";
 
 export default DetailsScreen = ({route,navigation}) => {
     const {id} = route.params;
     const [product, setProduct] = useState({});
+    const [orders, setOrders] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState('');
     const [newPrice, setNewPrice] = useState('');
@@ -41,6 +44,15 @@ export default DetailsScreen = ({route,navigation}) => {
         const image = API.BASE_URL + res.data.url; 
         let path2 = image.replace(/\\/g, "/");
         setImage(path2)
+
+        const add2 = API.BASE_URL + "orders/products/" + res.data._id;
+        const res2  = await axios.get(add2,{
+            headers: {
+                authorization: "Bearer " + token.token,
+              }
+        });
+        setOrders(res2.data);
+
     }
     const deleteData = async () => {
         const add = API.BASE_URL + "products/" + id;
@@ -131,7 +143,13 @@ export default DetailsScreen = ({route,navigation}) => {
                         <Text style={styles.ProductSpecsText}>Day Submitted: {product.daysubmitted}</Text>
                         {/* <Text style={styles.ProductSpecsText}>Date submit: {product.date}</Text> */}
                     </View>
-                    
+                    <View style={styles.List}>
+                    <FlatList
+            data={orders}
+            renderItem={(item) => <ClientCardOrdered data={item} navigation={navigation}/> }
+            keyExtractor={(item, index) => index.toString()}
+          />
+                    </View>
                 
                     <View style={styles.ButtonSpace}>
                         <TouchableOpacity style={styles.ButtonStyle} onPress={deleteData}>
@@ -154,7 +172,7 @@ const styles = StyleSheet.create({
     },
     ProductPhotoSpace:{
         //backgroundColor: 'yellow',
-        flex:4,
+        flex:3,
         // height: '40%',
         // width: '100%',
         alignItems: 'center',
@@ -162,14 +180,14 @@ const styles = StyleSheet.create({
     },
     ProductPhoto:{
         height:'90%',
-        width: '90%', 
+        width: '70%', 
         borderRadius: 20,
         
     },
     ProductInformation:{
         // height: '60%',
         // width: '100%',
-        flex: 6,
+        flex: 7,
        
         //justifyContent: "center",
         //backgroundColor: "red"
@@ -202,7 +220,7 @@ const styles = StyleSheet.create({
         color: '#0C3674',
     },
     ProductSpecsText:{
-        fontSize: 20,
+        
         marginTop: 20,
     },
     DeleteButton:{
@@ -226,7 +244,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#efb65b',
         margin:30,
     },
-
+    List:{
+        marginTop: 10,
+        marginLeft: 20,
+        height: 200,
+        width: '90%',
+    }
     
 
   })

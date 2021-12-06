@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     InformationText:{
-        fontSize:20,
+        //fontSize:20,
         margin: 30,
     },
     ButtonSpace:{
