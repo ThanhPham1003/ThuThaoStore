@@ -3,7 +3,7 @@ import axios from "axios";
 import { View, Text,StyleSheet, TouchableOpacity, Image,FlatList } from 'react-native'
 import {FirebaseContext} from '../context/FirebaseContext'
 import { TokenContext, TokenProvider } from '../context/TokenContext';
-//import { FlatList } from 'react-native-gesture-handler';
+import { HomeUpdatedContext, HomeUpdatedProvider } from '../context/HomeUpdatedContext';
 import ProductCard from '../components/ProductCard';
 import { TextInput } from 'react-native-gesture-handler';
 import API from '../config/environmentVariables'
@@ -13,16 +13,19 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
   const {navigation} = props;
   const firebase = useContext(FirebaseContext);
   const [token, setToken] = useContext(TokenContext);
+  const [reload, setReload] = useContext(HomeUpdatedContext);
   const [products, setProducts] = useState([]);
   const [filterProducts, setFilterProducts] = useState([]);
   const [search, setSearch] = useState('');
+  // useEffect(() => {
+  //     fetchData(token);
+  // }, [])
   useEffect(() => {
-      fetchData(token);
-  }, [])
+    fetchData(token);
+    setReload({isUpdated: false});
+}, [reload.isUpdated])
 
   const fetchData = async (token) => {
-    
-
       const res2 = await axios.get(API.BASE_URL + "products/allproducts",{
         headers: {
           authorization: "Bearer " + token.token,

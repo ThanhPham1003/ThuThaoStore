@@ -29,9 +29,6 @@ export default function SignupScreen ({navigation})  {
       }
     })();
   }, []);
-  useEffect(()=>{
-    console.log("33333", validateEmail(email))
-  },[email])
   const validateEmail = (email) => {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
@@ -46,7 +43,6 @@ export default function SignupScreen ({navigation})  {
 
     if (!result.cancelled) {
         setImage(result.uri);
-        console.log("33333", result.uri)
     }
 };
 const sendData = async(tk) =>{

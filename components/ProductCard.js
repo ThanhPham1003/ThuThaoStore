@@ -19,8 +19,8 @@ export default ProductCard = (props) => {
 
       navigation.navigate('Details',{id})
     }
-    const gotoOrder = (productName, productId) => {
-      navigation.navigate('Order', {productName,productId, navigation})
+    const gotoOrder = (product) => {
+      navigation.navigate('Order', {product, navigation})
     }
     return (
     <View style={styles.Container}>
@@ -38,11 +38,12 @@ export default ProductCard = (props) => {
             <View style={styles.ProductInfo}>
                 <Text> Code: {item.code}  </Text>
                 <Text> Quantity: {item.orderquantity} </Text>
-                <Text> Price: {item.price} $ </Text>
+                <Text> Cost: {item.cost}  </Text>
+                <Text> Sell: {item.sell}  </Text>
             </View>
           </View>
           <View style ={styles.PlusBottom}>
-            <TouchableOpacity onPress={() => gotoOrder(item.name, item._id)}>
+            <TouchableOpacity onPress={() => gotoOrder(item)}>
               <AntDesign name='plussquare' size = '40' color='#efb65b'/>
             </TouchableOpacity>
           </View>
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
       flex: 1,
       flexDirection:'row',
       marginTop: 20,
-      height: 120,
+      minHeight: 120,
       width: ' 90%',
       borderRadius: 10,
       backgroundColor:  '#FFFFFF',

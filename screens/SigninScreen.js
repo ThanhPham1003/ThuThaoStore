@@ -39,7 +39,6 @@ export default function SigninScreen ({navigation})  {
       setToken(({
         token: tk,
         isLoggedIn: true,
-        isChanged: false
       }))
     }
     else Alert.alert('Wrong token')

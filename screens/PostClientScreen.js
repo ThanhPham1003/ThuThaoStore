@@ -2,29 +2,31 @@ import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput, Button,Image, KeyboardAvoidingView, Alert } from 'react-native';
 import { TokenContext, TokenProvider } from '../context/TokenContext';
+import { ClientUpdatedContext, ClientUpdatedProvider } from '../context/ClientUpdatedContext';
+import {FirebaseContext} from '../context/FirebaseContext'
 import API from '../config/environmentVariables';
 export default function PostClientScreen(props){
+    const firebase = useContext(FirebaseContext);
     const {navigation} = props;
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
     const [link, setLink] = useState('');
     const [phone, setPhone] = useState('');
-    const [deposit, setDeposit] = useState('');
     const [token, setToken] = useContext(TokenContext);
-    
+    const [reload, setReload] = useContext(ClientUpdatedContext);
     const sendData = async() => {
-
-        const res = await axios.post( API.BASE_URL + "clients" ,{name: name, address: address, link: link, phone: phone, deposit: deposit}, {
+        const uid = firebase.getCurrentUser().uid;
+        const res = await axios.post( API.BASE_URL + "clients" ,{uid: uid, name: name, address: address, link: link, phone: phone}, {
             headers: {
                 authorization: "Bearer " + token.token,
             }
         });
         Alert.alert(res.data);
+        setReload({isUpdated: true})
         setName('');
         setAddress('');
         setLink('');
         setPhone('');
-        setDeposit('');
     }
     return(
         <KeyboardAvoidingView
@@ -52,14 +54,9 @@ export default function PostClientScreen(props){
                 <TextInput
                     style={styles.ClientInput}
                     placeholder='Phone Number'
+                    keyboardType={'decimal-pad'}
                     onChangeText={phone => setPhone(phone)}
                     value={phone}
-                />
-                <TextInput
-                    style={styles.ClientInput}
-                    placeholder='Deposit'
-                    onChangeText={deposit => setDeposit(deposit)}
-                    value={deposit}
                 />
                 <TouchableOpacity style={styles.SendBot} onPress={() => sendData()}>
                     <Text> Send </Text>

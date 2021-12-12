@@ -1,19 +1,26 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Button,Image, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Picker,Image, KeyboardAvoidingView, Alert } from 'react-native';
 import { TokenContext, TokenProvider } from '../context/TokenContext';
+import { HomeUpdatedContext, HomeUpdatedProvider } from '../context/HomeUpdatedContext';
+import {FirebaseContext} from '../context/FirebaseContext'
 import * as ImagePicker from 'expo-image-picker';
 import API from '../config/environmentVariables';
 import {MaterialIcons} from '@expo/vector-icons'
+import RNPickerSelect from 'react-native-picker-select'
 export default function PostProductScreen(props){
     const {navigation} = props;
+    const firebase = useContext(FirebaseContext);
     const [name, setName] = useState('');
     const [code, setCode] = useState('');
     const [orderquantity, setOrderQuantity] =  useState('');
-    const [price, setPrice] = useState('');
+    const [cost, setCost] = useState('');
+    const [sell, setSell] = useState('');
     const [daysubmitted, setDaysubmitted] = useState('');
+    const [status, setStatus] = useState('status');
     const [image, setImage] = useState(null);
     const [token, setToken] = useContext(TokenContext);
+    const [reload, setReload] = useContext(HomeUpdatedContext);
     useEffect(() => {
         (async () => {
           if (Platform.OS !== 'web') {
@@ -35,20 +42,21 @@ export default function PostProductScreen(props){
   
         if (!result.cancelled) {
             setImage(result.uri);
-            console.log("33333", result.uri)
         }
     };
     
 
     const sendData = async() =>{
         const data  = new FormData()
-        
-        data.append('uid', '123456');
+        const uid = firebase.getCurrentUser().uid;
+        data.append('uid', uid);
         data.append('name', name);
-        data.append('price', price);
+        data.append('cost', cost);
+        data.append('sell', sell);
         data.append('code', code);
         data.append('orderquantity', orderquantity);
         data.append('daysubmitted', daysubmitted)
+        data.append('status', status)
         data.append('productImage', {
             uri: image,
             type: 'image',
@@ -61,10 +69,13 @@ export default function PostProductScreen(props){
             }
 
         });
-        alert(res.data);
+        Alert.alert(res.data)
+        setReload({isUpdated: true})
         setName('');
         setDaysubmitted('');
-        setPrice('');
+        setStatus('');
+        setCost('')
+        setSell('');
         setCode('');
         setOrderQuantity('');
         setImage(null);
@@ -98,9 +109,17 @@ export default function PostProductScreen(props){
                 />
                 <TextInput
                     style={styles.ProductInput}
-                    placeholder='Price'
-                    onChangeText={price => setPrice(price)}
-                    value={price}
+                    placeholder='Cost'
+                    keyboardType={'decimal-pad'}
+                    onChangeText={cost => setCost(cost)}
+                    value={cost}
+                />
+                <TextInput
+                    style={styles.ProductInput}
+                    placeholder='Sell'
+                    keyboardType={'decimal-pad'}
+                    onChangeText={sell => setSell(sell)}
+                    value={sell}
                 />
                 <TextInput
                     style={styles.ProductInput}
@@ -111,6 +130,7 @@ export default function PostProductScreen(props){
                 < TextInput
                    style={styles.ProductInput}
                     placeholder='Order Quantity'
+                    keyboardType={'decimal-pad'}
                     onChangeText={orderquantity => setOrderQuantity(orderquantity)}
                     value={orderquantity}
                 />
@@ -120,6 +140,19 @@ export default function PostProductScreen(props){
                     onChangeText={daysubmitted => setDaysubmitted(daysubmitted)}
                     value={daysubmitted}
                 />
+
+                <View style={styles.StatusPicker}>
+                    <RNPickerSelect
+                    placeholder={{label : "Select your status", value: "status"}}
+                    onValueChange={(itemValue) => setStatus(itemValue)}
+                    items={[
+                        { label : "Available", value: "Available" },
+                        { label: "Ordering", value: "Ordering" }
+
+                    ]} />
+                </View>
+
+
                 
 
                 <TouchableOpacity style={styles.SendBot} onPress={() => sendData()}>
@@ -138,8 +171,8 @@ const styles = StyleSheet.create({
     },
     AddImageSpace:{
         borderWidth: 3,
-        height: '25%',
-        width: '70%',
+        height: '20%',
+        width: '60%',
         borderRadius: 10,
         backgroundColor: '#e7eaed',
         justifyContent: 'center',
@@ -157,11 +190,20 @@ const styles = StyleSheet.create({
         borderColor: '#efb65c',
         backgroundColor: '#e7eaed',
         borderRadius: 20,
-        margin: 10,
+        margin: 5,
         padding: 10,
         
     },
-    
+    StatusPicker:{
+        height: 50,
+        width: '70%',
+        borderWidth: 5,
+        borderColor: '#efb65c',
+        backgroundColor: '#e7eaed',
+        borderRadius: 20,
+        margin: 5,
+        padding: 10
+    },
     SendBot: {
         borderColor: '#efb65c',
         borderWidth: 2,
@@ -171,6 +213,6 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent: 'center',
         backgroundColor: '#efb65b',
-        marginTop:30,
+        marginTop:10,
     }
 })

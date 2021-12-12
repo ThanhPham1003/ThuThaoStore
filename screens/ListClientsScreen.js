@@ -3,6 +3,7 @@ import axios from "axios";
 import { View, Text,StyleSheet, TouchableOpacity, Image,FlatList } from 'react-native'
 import {FirebaseContext} from '../context/FirebaseContext'
 import { TokenContext, TokenProvider } from '../context/TokenContext'
+import { ClientUpdatedContext, ClientUpdatedProvider } from '../context/ClientUpdatedContext';
 import { TextInput } from 'react-native-gesture-handler';
 import API from '../config/environmentVariables'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -11,12 +12,14 @@ import ClientCardDetail from '../components/ClientCardDetail';
 export default function ListClientsScreen(props){
   const {navigation} = props;
   const [token, setToken] = useContext(TokenContext);
+  const [reload, setReload] = useContext(ClientUpdatedContext);
   const [clients, setClients] = useState([]);
   const [filterClients, setFilterClients] = useState([]);
   const [search, setSearch] = useState('');
   useEffect(() => {
     fetchClient(token);
-}, [])
+    setReload({isUpdated: false})
+}, [reload.isUpdated])
   const fetchClient = async (token) =>{
     const res = await axios.get(API.BASE_URL + "clients",{
       headers: {

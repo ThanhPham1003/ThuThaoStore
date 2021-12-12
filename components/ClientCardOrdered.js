@@ -4,7 +4,7 @@ import {FirebaseContext} from '../context/FirebaseContext';
 import API from '../config/environmentVariables';
 
 export default ClientCardOrdered= (props) => {
-  const {data, navigation, child} = props
+  const {data, navigation} = props
   const {item} = data;
   const details = (phone) => {
     navigation.navigate('Client Details',{phone})
@@ -13,15 +13,13 @@ export default ClientCardOrdered= (props) => {
     child(item);
   }
   return(
-    <View style = {styles.Container} >
+    <TouchableOpacity style = {styles.Container} onPress={() => details(item.phone)} >
       
       <View style={styles.InfoContainer}>
-        <TouchableOpacity onPress={() => details(item.phone)}>
           <Text style={styles.ClientTittleText}> {item.clientname} </Text>
-        </TouchableOpacity>
         <Text style={styles.ClientInfoText}> {item.phone}</Text>
       </View>  
-    </View>
+    </TouchableOpacity>
 
   )
 }

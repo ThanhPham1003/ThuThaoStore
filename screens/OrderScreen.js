@@ -5,12 +5,14 @@ import { TokenContext, TokenProvider } from '../context/TokenContext';
 import API from '../config/environmentVariables';
 import ClientCardOrder from '../components/ClientCardOrder';
 export default function OrderScreen({route, props}){
-  const {productName,productId, navigation} = route.params;  
+  const {product, navigation} = route.params;  
   //const {navigation} = props;
   const [clientName, setClientName] = useState('');
   const [phone, setPhone] = useState('');
+  const [clientID, setClientID] = useState('');
   const [type, setType] = useState('');
   const [amount, setAmount] = useState('');
+  const [deposit, setDeposit] = useState('');
   const [dayordered, setDayordered] = useState('');
   const [token, setToken] = useContext(TokenContext);
   const [clients, setClients] = useState([]);
@@ -20,6 +22,9 @@ export default function OrderScreen({route, props}){
   useEffect(() => {
       fetchData(token);
   },[])
+  useEffect(() => {
+    console.log("33333", product._id)
+  }, [product])
   const fetchData = async (token) => {
       const res = await axios.get(API.BASE_URL +"clients",{
         headers: {
@@ -48,23 +53,29 @@ export default function OrderScreen({route, props}){
       }
   }
   const sendData = async () => {
-    const res = await axios.post( API.BASE_URL + "orders" ,{productname: productName,productid: productId, clientname: clientName,phone: phone, type: type, amount: amount, dayordered: dayordered}, {
+    let costs = parseInt(product.cost) * parseInt(amount);
+    let sells = parseInt(product.sell) * parseInt(amount);
+
+    const res = await axios.post( API.BASE_URL + "orders" ,{productname: product.name,productid: product._id, clientname: clientName,phone: phone,clientid: clientID, type: type, amount: amount,deposit: deposit, costs: costs, sells: sells, dayordered: dayordered}, {
         headers: {
             authorization: "Bearer " + token.token,
         }
     });
     Alert.alert(res.data);
     setClientName('');
+    searchFilter('');
     setType('');
     setAmount('');
+    setDeposit('');
     setDayordered('');
   }
 
   const fulfillInfo = (childInfo) => {
-    const {name= '', phone = ''} = childInfo;
+    const {name= '', phone = '', _id = ''} = childInfo;
     searchFilter(name);
     setClientName(name);
     setPhone(phone);
+    setClientID(_id)
   }
 
   return(
@@ -96,8 +107,16 @@ export default function OrderScreen({route, props}){
                     <TextInput
                         style={styles.OrderInput}
                         placeholder='Amount'
+                        keyboardType={'decimal-pad'}
                         onChangeText={amount => setAmount(amount)}
                         value={amount}
+                    />
+                    <TextInput
+                        style={styles.OrderInput}
+                        placeholder='Deposit'
+                        keyboardType={'decimal-pad'}
+                        onChangeText={deposit => setDeposit(deposit)}
+                        value={deposit}
                     />
                     <TextInput
                         style={styles.OrderInput}

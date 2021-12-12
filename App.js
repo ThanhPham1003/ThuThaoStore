@@ -5,13 +5,19 @@ import AppStackScreens from "./stacks/AppStackScreens";
 import { TokenProvider } from './context/TokenContext';
 import TabStackScreens from './stacks/TabStackScreens';
 import { NavigationContainer } from '@react-navigation/native';
+import { HomeUpdatedProvider } from './context/HomeUpdatedContext';
+import { ClientUpdatedContext, ClientUpdatedProvider } from './context/ClientUpdatedContext';
 const App = () => {
   return(
     <FirebaseProvider>
       <TokenProvider>
-        <NavigationContainer>
-          <AppStackScreens/>
-        </NavigationContainer>
+        <HomeUpdatedProvider>
+          <ClientUpdatedProvider>
+            <NavigationContainer>
+              <AppStackScreens/>
+            </NavigationContainer>
+          </ClientUpdatedProvider>
+        </HomeUpdatedProvider>  
       </TokenProvider>
     </FirebaseProvider>
   )

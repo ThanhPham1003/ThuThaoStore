@@ -203,22 +203,25 @@ export default function ProfileScreen(props){
                                 
                             </View>
                             <View style={styles.ButtonSpace}>
+                                <View style={styles.EditAndChangeSpace}>
+                                    <TouchableOpacity style={styles.ButtonStyle}
+                                    onPress={() => setIsEditing(true)}
+                                    >
+                                        <Text>Edit Profile</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.ButtonStyle}
+                                    onPress={() => setIsChangingPassword(true)}>
+                                        <Text>Chage Password</Text>
+                                    </TouchableOpacity>
+                                </View>
                                 <TouchableOpacity style={styles.ButtonStyle}
-                                onPress={() => setIsEditing(true)}
-                                >
-                                    <Text>Edit Profile</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.ButtonStyle}
-                                onPress={() => setIsChangingPassword(true)}>
-                                    <Text>Chage Password</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <View style={styles.LogOutSpace}>
-                            <TouchableOpacity style={styles.ButtonStyle}
                                 onPress={logOut}
                                 >
                                     <Text>LogOut</Text>
                                 </TouchableOpacity>
+                            </View>
+                            <View style={styles.LogOutSpace}>
+                            
                             </View>
                         </>
                     )}
@@ -245,7 +248,7 @@ const styles = StyleSheet.create({
     ImageStyle:{
 
         borderWidth: 5,
-        height: '75%',
+        height: '80%',
         width: '55%',
         borderRadius: 1000,
         // backgroundColor: '#e7eaed',
@@ -282,13 +285,16 @@ const styles = StyleSheet.create({
     },
     InformationText:{
         //fontSize:20,
-        margin: 30,
+        marginTop: 40,
     },
     ButtonSpace:{
-        flex: 2,
-        flexDirection:'row',
+        flex: 3,
+        
         alignItems:'center',
         justifyContent: 'center',
+    },
+    EditAndChangeSpace:{
+        flexDirection:'row',
     },
     ButtonStyle:{
         borderColor: '#efb65c',

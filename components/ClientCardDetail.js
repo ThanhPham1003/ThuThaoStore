@@ -13,15 +13,13 @@ export default ClientCardDetail = (props) => {
     child(item);
   }
   return(
-    <View style = {styles.Container} >
+    <TouchableOpacity style = {styles.Container} onPress={() => details(item.phone)}>
       
       <View style={styles.InfoContainer}>
-        <TouchableOpacity onPress={() => details(item.phone)}>
           <Text style={styles.ClientTittleText}> {item.name} </Text>
-        </TouchableOpacity>
         <Text style={styles.ClientInfoText}> {item.phone}</Text>
       </View>  
-    </View>
+    </TouchableOpacity>
 
   )
 }
@@ -32,7 +30,7 @@ const styles = StyleSheet.create({
   },
   InfoContainer:{
     marginTop: 20,
-    height: 60,
+    minHeight: 60,
     width: ' 90%',
     borderRadius: 10,
     backgroundColor:  '#FFFFFF',

@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
-import { View, Text,StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
+import { View, Text,StyleSheet, TouchableOpacity, Image, FlatList, Alert } from 'react-native';
 import axios from "axios";
 import { TextInput } from "react-native-gesture-handler";
 import { TokenContext, TokenProvider } from '../context/TokenContext';
+import { HomeUpdatedContext, HomeUpdatedProvider } from '../context/HomeUpdatedContext';
 import API from '../config/environmentVariables';
 import ClientCardDetail from "../components/ClientCardDetail";
 import ClientCardOrdered from "../components/ClientCardOrdered";
@@ -13,25 +14,28 @@ export default DetailsScreen = ({route,navigation}) => {
     const [orders, setOrders] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [newName, setNewName] = useState('');
-    const [newPrice, setNewPrice] = useState('');
+    const [newCost, setNewCost] = useState('');
+    const [newSell, setNewSell] = useState('');
     const [newCode, setNewCode] = useState('');
     const [newOrderQuantity, setNewOrderQuantity] = useState('');
     const [newDaySubmitted, setNewDaySubmitted] = useState('');
     const [image, setImage] = useState('');
     const [token, setToken] = useContext(TokenContext);
+    const [isUpdated, setIsUpdated] = useContext(HomeUpdatedContext);
     useEffect(() => {
         fetchData();
     },[])
 
     useEffect(() => {
-        const {name = '', price = '', code = '', orderquantity = '', daysubmitted= ''} = product
+        const {name = '', cost = '', sell = '',code = '', orderquantity = '', daysubmitted= ''} = product
         
-
         setNewName(name);
+        setNewCost(cost.toString());
+        setNewSell(sell.toString());
         setNewCode(code);
         setNewOrderQuantity(orderquantity);
         setNewDaySubmitted(daysubmitted);
-        setNewPrice(price.toString())
+
     }, [product])
     const fetchData = async () => {
         const add = API.BASE_URL + "products/" + id;
@@ -61,21 +65,27 @@ export default DetailsScreen = ({route,navigation}) => {
                 authorization: "Bearer " + token.token,
               }
         });
+        Alert.alert(res.data)
+        setIsUpdated({isUpdated: true});
         navigation.navigate('Thu Thao Store');
     }
     const updateData = async () => {
         const add = API.BASE_URL + "products/" + id;
         const res = await axios.patch(add, {
-            headers: {
                 name: newName,
-                price: newPrice,
+                cost: newCost,
+                sell: newSell,
                 code: newCode,
                 orderquantity: newOrderQuantity,
-                daysubmitted: newDaySubmitted,
-            },
-        });
+                daysubmitted: newDaySubmitted},{
+                headers: {
+                        authorization: "Bearer " + token.token,
+                    }
+                });
+        Alert.alert(res.data)
         fetchData();
         setIsEditing(false);
+        setIsUpdated({isUpdated: true});
     }
 
 
@@ -97,34 +107,44 @@ export default DetailsScreen = ({route,navigation}) => {
                         value= {newName}
                         onChangeText={(text) => setNewName(text)} />
                     </View>
-                    <View style={styles.ProductSpecs}>
-                        <View style={styles.EditInputSpace}>
-                            <Text style={styles.ProductSpecsText}>Code: </Text>
-                            <TextInput style={styles.EditInput}
-                            value= {newCode}
-                            onChangeText={(text) => setNewCode(text)} />
-                        </View>
-                        <View style={styles.EditInputSpace}>
-                            <Text style={styles.ProductSpecsText}>Quantity:  </Text>
-                            <TextInput style={styles.EditInput}
-                            value= {newOrderQuantity}
-                            onChangeText={(text) => setNewOrderQuantity(text)} />
-                        </View>
-                        <View style={styles.EditInputSpace}>
-                            <Text style={styles.ProductSpecsText}>Day Submitted:  </Text>
-                            <TextInput style={styles.EditInput}
-                            value= {newDaySubmitted}
-                            onChangeText={(text) => setNewDaySubmitted(text)} />
-                        </View>
-                        <View style={styles.EditInputSpace}>
-                            <Text style={styles.ProductSpecsText}>Price: </Text>
-                            <TextInput style={styles.EditInput}
-                            value= {newPrice}
-                            keyboardType={'decimal-pad'}
-                            onChangeText={(text) => setNewPrice(text)} />
-                        </View>
+                    <View style={styles.ProductSpecsEdit}>
+
+                            <View style={styles.EditInputSpace}>
+                                <Text style={styles.ProductSpecsText}>Code: </Text>
+                                <TextInput style={styles.EditInput}
+                                value= {newCode}
+                                onChangeText={(text) => setNewCode(text)} />
+                            </View>
+                            <View style={styles.EditInputSpace}>
+                                <Text style={styles.ProductSpecsText}>Quantity:  </Text>
+                                <TextInput style={styles.EditInput}
+                                value= {newOrderQuantity}
+                                onChangeText={(text) => setNewOrderQuantity(text)} />
+                            </View>
+                            <View style={styles.EditInputSpace}>
+                                <Text style={styles.ProductSpecsText}>Day Submitted:  </Text>
+                                <TextInput style={styles.EditInput}
+                                value= {newDaySubmitted}
+                                onChangeText={(text) => setNewDaySubmitted(text)} />
+                            </View>
+
+                            <View style={styles.EditInputSpace}>
+                                <Text style={styles.ProductSpecsText}>Cost: </Text>
+                                <TextInput style={styles.EditInput}
+                                value= {newCost}
+                                keyboardType={'decimal-pad'}
+                                onChangeText={(text) => setNewCost(text)} />
+                            </View>
+                            <View style={styles.EditInputSpace}>
+                                <Text style={styles.ProductSpecsText}>Sell: </Text>
+                                <TextInput style={styles.EditInput}
+                                value= {newSell}
+                                keyboardType={'decimal-pad'}
+                                onChangeText={(text) => setNewSell(text)} />
+                            </View>
+
                     </View>
-                    <View style={styles.ButtonSpace}>
+                    <View style={styles.ButtonSpaceEdit}>
                         <TouchableOpacity style={styles.ButtonStyle} onPress={updateData}>
                             <Text> Save </Text>
                         </TouchableOpacity>
@@ -137,11 +157,20 @@ export default DetailsScreen = ({route,navigation}) => {
 
                     </View>
                     <View style={styles.ProductSpecs}>
-                        <Text style={styles.ProductSpecsText}>Price: {product.price}</Text>
-                        <Text style={styles.ProductSpecsText}>Code: {product.code} </Text>
-                        <Text style={styles.ProductSpecsText}>Quantity: {product.orderquantity}</Text>
-                        <Text style={styles.ProductSpecsText}>Day Submitted: {product.daysubmitted}</Text>
+                        <View style={styles.HalfProductSpecs}>
+                            <Text style={styles.ProductSpecsText}>Cost: {product.cost}</Text>
+                            <Text style={styles.ProductSpecsText}>Quantity: {product.orderquantity}</Text>
+                            <Text style={styles.ProductSpecsText}>Day Submitted: {product.daysubmitted}</Text>
+                            <Text style={styles.ProductSpecsText}>List Order: </Text>
+                        </View>
+                        <View style={styles.HalfProductSpecs}>
+                            <Text style={styles.ProductSpecsText}>Sell: {product.sell}</Text>
+                            <Text style={styles.ProductSpecsText}>Code: {product.code} </Text>
+                        </View>
                         {/* <Text style={styles.ProductSpecsText}>Date submit: {product.date}</Text> */}
+                    </View>
+                    <View style={styles.ProductSpecs}>
+                        
                     </View>
                     <View style={styles.List}>
                     <FlatList
@@ -203,9 +232,23 @@ const styles = StyleSheet.create({
     },
     ProductSpecs:{
         marginLeft: 20,
+        flexDirection:'row',
+
     },
+    ProductSpecsEdit:{
+        marginLeft: 20,
+        flexDirection:'column'
+    },
+    HalfProductSpecs:{
+        flexDirection: 'column',
+        marginLeft: 30,
+    },
+
     EditInputSpace:{
         flexDirection:'row'
+    },
+    HalfSpecsEdit:{
+        flexDirection: 'column'
     },
     EditInput:{
         borderBottomWidth: 1,
@@ -220,7 +263,6 @@ const styles = StyleSheet.create({
         color: '#0C3674',
     },
     ProductSpecsText:{
-        
         marginTop: 20,
     },
     DeleteButton:{
@@ -233,6 +275,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
 
     },
+    ButtonSpaceEdit:{
+        alignItems:'center',
+        justifyContent: 'center',
+        marginTop: 40,
+    },
     ButtonStyle:{
         borderColor: '#efb65c',
         borderWidth: 2,
@@ -242,7 +289,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent: 'center',
         backgroundColor: '#efb65b',
-        margin:30,
+        marginRight: 20,
     },
     List:{
         marginTop: 10,

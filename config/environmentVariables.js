@@ -1,4 +1,4 @@
 export default {
-    BASE_URL: "http://192.168.1.17:5000/",
+    BASE_URL: "http://192.168.1.14:5000/",
   };
   
