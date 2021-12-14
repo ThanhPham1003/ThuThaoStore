@@ -48,7 +48,6 @@ export default function SignupScreen ({navigation})  {
 const sendData = async(tk) =>{
 
   const uid = firebase.getCurrentUser().uid;
-  console.log("123456", uid);
   const data  = new FormData()
   data.append('email',email);
   data.append('uid', uid);

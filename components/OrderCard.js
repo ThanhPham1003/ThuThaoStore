@@ -48,7 +48,6 @@ export default OrderCard = (props) => {
       }
     });
     setUser(res2.data)
-    console.log("44444", res2.data)
   }
   const handleDelete = () =>{
     Alert.alert(
@@ -97,7 +96,6 @@ export default OrderCard = (props) => {
     const uid = firebase.getCurrentUser().uid;
     const add = API.BASE_URL + "users/updatesells/" + uid;
     const newSell = parseInt(user.currentsells) + parseInt(item.sells);
-    console.log("44444", newSell)
     const res = await axios.patch(add, { currentsells: newSell},{
       headers:{
         authorization: "Bearer " + token.token,

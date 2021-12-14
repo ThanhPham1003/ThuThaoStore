@@ -22,9 +22,6 @@ export default function OrderScreen({route, props}){
   useEffect(() => {
       fetchData(token);
   },[])
-  useEffect(() => {
-    console.log("33333", product._id)
-  }, [product])
   const fetchData = async (token) => {
       const res = await axios.get(API.BASE_URL +"clients",{
         headers: {

@@ -99,7 +99,6 @@ export default DetailsScreen = ({route,navigation}) => {
                     }
                 });
         Alert.alert(res.data)
-        console.log("3333", res.data)
         fetchData();
         setIsEditing(false);
         setIsUpdated({isUpdated: true});

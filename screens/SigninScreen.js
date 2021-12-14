@@ -99,11 +99,11 @@ export default function SigninScreen ({navigation})  {
               <TouchableOpacity style={styles.LoginBottom} onPress={handleLogin}>
                 <Text> Login </Text>
               </TouchableOpacity>
-              <View style={styles.SignUpSpace}>
+              {/* <View style={styles.SignUpSpace}>
                 <Text> Don't have an account? </Text>
                 <TouchableOpacity onPress={() => navigation.navigate("Sign up")}><Text style={styles.SignUpText}>Sign Up</Text></TouchableOpacity>
                 
-              </View>
+              </View> */}
               <View style={styles.SignUpSpace}>
                 <Text> Forgot Password? </Text>
                 <TouchableOpacity onPress={() => navigation.navigate("Reset Password")}><Text style={styles.SignUpText}>Reset Password</Text></TouchableOpacity>

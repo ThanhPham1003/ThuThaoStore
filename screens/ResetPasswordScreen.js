@@ -19,7 +19,7 @@ export default function ResetPasswordScreen({navigation}){
       <View  style={styles.Container}>
         <View style={styles.LogoSpace}>
             <Image
-            source = {require('../assets/cute-petshop-logo-with-cat-dog_454510-56.jpg')}
+            source = {require('../assets/thuthaostore.jpg')}
             style={styles.LogoStyle}
             />
 
@@ -50,7 +50,7 @@ export default function ResetPasswordScreen({navigation}){
 const styles = StyleSheet.create({
   Container: {
     flex:1,
-    backgroundColor: '#f9e3bd',
+    backgroundColor: '#ffffff',
   },
   LogoSpace:{
     flex: 5,
