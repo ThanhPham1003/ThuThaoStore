@@ -7,7 +7,7 @@ export default ClientCardOrder = (props) => {
   const {data, navigation, child} = props
   const {item} = data;
   const details = (id) => {
-    navigation.navigate('Client Details',{id})
+    navigation.navigate('Thông Tin',{id})
 }
   const setInfo = () => {
 

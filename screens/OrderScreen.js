@@ -88,7 +88,7 @@ export default function OrderScreen({route, props}){
                 //style={styles.SearchBar}
                         style={styles.OrderInput}
                         value={search}
-                        placeholder="Client Name"
+                        placeholder="Tên Khách Hàng"
                         onChangeText={(text) => searchFilter(text)}/>
                     <View style={styles.List}>
                         <FlatList
@@ -100,32 +100,32 @@ export default function OrderScreen({route, props}){
                 
                     <TextInput
                         style={styles.OrderInput}
-                        placeholder='Type'
+                        placeholder='Loại'
                         onChangeText={type => setType(type)}
                         value={type}
                     />
                     <TextInput
                         style={styles.OrderInput}
-                        placeholder='Amount'
+                        placeholder='Số Lượng'
                         keyboardType={'decimal-pad'}
                         onChangeText={amount => setAmount(amount)}
                         value={amount}
                     />
                     <TextInput
                         style={styles.OrderInput}
-                        placeholder='Deposit'
+                        placeholder='Cọc'
                         keyboardType={'decimal-pad'}
                         onChangeText={deposit => setDeposit(deposit)}
                         value={deposit}
                     />
                     <TextInput
                         style={styles.OrderInput}
-                        placeholder='Day Ordered'
+                        placeholder='Ngày mua'
                         onChangeText={dayordered => setDayordered(dayordered)}
                         value={dayordered}
                     />
                     <TouchableOpacity style={styles.SendBot} onPress={() => sendData()}>
-                        <Text> Send </Text>
+                        <Text> Lưu Order </Text>
                     </TouchableOpacity>
                 
             </View>

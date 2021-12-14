@@ -57,6 +57,22 @@ export default ClientScreen = ({route,navigation}) =>{
     setSells(totalSell)
     setProfit(totalSell - totalCost);
   }
+  const handleDelete = () =>{
+    Alert.alert(
+      "CHÚ Ý",
+      "Bạn có chắc chắn muốn xóa không?",
+      [
+        {
+          text:" Hủy bỏ",
+          onPress: () => console.log("Hủy bỏ")
+        },
+        {
+          text: "Xác nhận", onPress: () => deleteData()
+
+        }
+      ]
+    )
+  }
   const deleteData = async () =>{
     const add = API.BASE_URL + "clients/" + client._id;
     const res = await axios.delete(add, {
@@ -100,19 +116,19 @@ export default ClientScreen = ({route,navigation}) =>{
           </View>
           <View style={styles.ClientSpecsEdit}>
             <View style={styles.EditInputSpace}>
-              <Text style={styles.ClientInfoText}>Address: </Text>
+              <Text style={styles.ClientInfoText}>Địa Chỉ: </Text>
               <TextInput style={styles.EditInput}
                 value= {newAddress}
                 onChangeText={(text) => setNewAddress(text)} />
             </View>
             <View style={styles.EditInputSpace}>
-              <Text style={styles.ClientInfoText}>Link: </Text>
+              <Text style={styles.ClientInfoText}>Link Facebook: </Text>
               <TextInput style={styles.EditInput}
                 value= {newLink}
                 onChangeText={(text) => setNewLink(text)} />
             </View>
             <View style={styles.EditInputSpace}>
-              <Text style={styles.ClientInfoText}>Phone: </Text>
+              <Text style={styles.ClientInfoText}>Số Điện Thoại: </Text>
               <TextInput style={styles.EditInput}
                 value= {newPhone}
                 onChangeText={(text) => setNewPhone(text)} />
@@ -120,7 +136,7 @@ export default ClientScreen = ({route,navigation}) =>{
           </View>
           <View style={styles.ButtonSpaceEdit}>
             <TouchableOpacity style={styles.ButtonStyle} onPress={updateData}>
-              <Text> Save </Text>
+              <Text> Lưu </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -133,34 +149,32 @@ export default ClientScreen = ({route,navigation}) =>{
           <View style={styles.LeftClientInfo}>
             
             <Text style={styles.ClientInfoText}>
-              Link: {client.link}
+              Link Facebook: {client.link}
             </Text>
             <Text style={styles.ClientInfoText}>
-              Phone: {client.phone}
+              Số Điện Thoại: {client.phone}
             </Text>
             <Text style={styles.ClientInfoText}>
-              Deposit: {deposit}
+              Tiền Cọc: {deposit}
             </Text>
             <Text style={styles.ClientInfoText}>
-              Address: {client.address}
+              Địa Chỉ: {client.address}
             </Text>
             <Text style={styles.ClientInfoText}>
-              List Order:
+              Danh sách mua hàng:
             </Text>
 
           </View>
           <View style={styles.RightClientInfo}>
             <Text style={styles.ClientInfoText}>
-              Costs: {costs}
+              Tổng giá nhập: {costs}
             </Text>
             <Text style={styles.ClientInfoText}>
-              Sells: {sells}
+              Tổng giá bán: {sells}
             </Text>
             <Text style={styles.ClientInfoText}>
-              Profit: {profit}
+              Lợi nhuận: {profit}
             </Text>
-          
-
           </View>
         
         </View>
@@ -172,11 +186,11 @@ export default ClientScreen = ({route,navigation}) =>{
             />
           </View>
           <View style={styles.ButtonSpace}>
-            <TouchableOpacity style={styles.ButtonStyle} onPress={deleteData}>
-              <Text> Delete </Text>
+            <TouchableOpacity style={styles.ButtonStyle} onPress={handleDelete}>
+              <Text> Xóa Khách Hàng </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.ButtonStyle} onPress={() => setIsEditing(true)}>
-              <Text> Edit</Text>
+              <Text> Sửa thông tin</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -232,7 +246,7 @@ const styles = StyleSheet.create({
   },
   RightClientInfo:{
     flexDirection: 'column',
-    marginLeft: 100,
+    marginLeft: 50,
   },
   ClientInfoText:{
     marginTop: 20,

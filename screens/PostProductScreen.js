@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Picker,Image, KeyboardAvoidingView, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Picker,Image, KeyboardAvoidingView, ActivityIndicator, Alert} from 'react-native';
 import { TokenContext, TokenProvider } from '../context/TokenContext';
 import { HomeUpdatedContext, HomeUpdatedProvider } from '../context/HomeUpdatedContext';
 import {FirebaseContext} from '../context/FirebaseContext'
@@ -8,9 +8,11 @@ import * as ImagePicker from 'expo-image-picker';
 import API from '../config/environmentVariables';
 import {MaterialIcons} from '@expo/vector-icons'
 import RNPickerSelect from 'react-native-picker-select'
+import Modal from 'react-native-modal';
 export default function PostProductScreen(props){
     const {navigation} = props;
     const firebase = useContext(FirebaseContext);
+    const [loaded, setLoaded] = useState(true);
     const [name, setName] = useState('');
     const [code, setCode] = useState('');
     const [orderquantity, setOrderQuantity] =  useState('');
@@ -47,6 +49,7 @@ export default function PostProductScreen(props){
     
 
     const sendData = async() =>{
+        setLoaded(false)
         const data  = new FormData()
         const uid = firebase.getCurrentUser().uid;
         data.append('uid', uid);
@@ -70,6 +73,7 @@ export default function PostProductScreen(props){
 
         });
         Alert.alert(res.data)
+        setLoaded(true);
         setReload({isUpdated: true})
         setName('');
         setDaysubmitted('');
@@ -91,32 +95,40 @@ export default function PostProductScreen(props){
             style={{flex: 1}}
         >
             <View style ={styles.Container}>
+            <Modal
+                animationType="slide"
+                visible={!loaded}>
+                <View style={styles.LoadingStyle}>
+                    <ActivityIndicator size="large" color="#000" />
+                    <Text> Chờ chút nhé...</Text>
+                </View>
+            </Modal>  
                 <TouchableOpacity style={styles.AddImageSpace} onPress={uploadImage}>
                     {image ?
                     <Image style={styles.ProductImage} source={{uri: image}} />
                     :
                     <>
                     <MaterialIcons name="add-a-photo" size={60}/>
-                    <Text> Select a photo for your Product</Text>
+                    <Text> Chọn ảnh cho sản phẩm </Text>
                     </>
                 }
                 </TouchableOpacity>
                 <TextInput
                     style={styles.ProductInput}
-                    placeholder='Name'
+                    placeholder='Tên'
                     onChangeText={name => setName(name)}
                     value={name}
                 />
                 <TextInput
                     style={styles.ProductInput}
-                    placeholder='Cost'
+                    placeholder='Giá Nhập'
                     keyboardType={'decimal-pad'}
                     onChangeText={cost => setCost(cost)}
                     value={cost}
                 />
                 <TextInput
                     style={styles.ProductInput}
-                    placeholder='Sell'
+                    placeholder='Giá Bán'
                     keyboardType={'decimal-pad'}
                     onChangeText={sell => setSell(sell)}
                     value={sell}
@@ -129,25 +141,25 @@ export default function PostProductScreen(props){
                 />
                 < TextInput
                    style={styles.ProductInput}
-                    placeholder='Order Quantity'
+                    placeholder='Số lượng hàng'
                     keyboardType={'decimal-pad'}
                     onChangeText={orderquantity => setOrderQuantity(orderquantity)}
                     value={orderquantity}
                 />
                 < TextInput
                    style={styles.ProductInput}
-                    placeholder='Day Submitted'
+                    placeholder='Ngày đăng'
                     onChangeText={daysubmitted => setDaysubmitted(daysubmitted)}
                     value={daysubmitted}
                 />
 
                 <View style={styles.StatusPicker}>
                     <RNPickerSelect
-                    placeholder={{label : "Select your status", value: "status"}}
+                    placeholder={{label : "Chọn trạng thái sản phẩm", value: "status"}}
                     onValueChange={(itemValue) => setStatus(itemValue)}
                     items={[
-                        { label : "Available", value: "Available" },
-                        { label: "Ordering", value: "Ordering" }
+                        { label : "Có sẵn", value: "Có Sẵn" },
+                        { label: "Đang order", value: "Đang Order"}
 
                     ]} />
                 </View>
@@ -156,7 +168,7 @@ export default function PostProductScreen(props){
                 
 
                 <TouchableOpacity style={styles.SendBot} onPress={() => sendData()}>
-                    <Text> Send </Text>
+                    <Text> Lưu Sản Phẩm </Text>
                 </TouchableOpacity>
             </View>  
         </KeyboardAvoidingView>
@@ -169,6 +181,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#f5ceb2',
     },
+    LoadingStyle:{
+        margin: 10,
+        backgroundColor: "#efb65b",
+        borderRadius: 20,
+        padding: 20,
+        alignItems: "center",
+        shadowColor: "#fff",
+        shadowOffset:{
+          width: 0,
+          height:2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius:4,
+        elevation: 5
+      },
     AddImageSpace:{
         borderWidth: 3,
         height: '20%',
@@ -209,7 +236,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 10,
         height: 30,
-        width:'20%',
+        width:'30%',
         alignItems:'center',
         justifyContent: 'center',
         backgroundColor: '#efb65b',

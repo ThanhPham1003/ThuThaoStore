@@ -1,12 +1,12 @@
 
 import { setStatusBarHidden } from 'expo-status-bar';
 import React, { useContext, useEffect, useState } from 'react';
-import {Text, StyleSheet, View, TextInput, TouchableOpacity, Image, Alert, KeyboardAvoidingView} from 'react-native';
+import {Text, StyleSheet, View, TextInput, TouchableOpacity, Image, KeyboardAvoidingView,ActivityIndicator} from 'react-native';
 import {FirebaseContext} from '../context/FirebaseContext'
 import { TokenContext, TokenProvider } from '../context/TokenContext';
 import API from '../config/environmentVariables'
 import axios from 'axios';
-
+import Modal from 'react-native-modal';
 export default function SigninScreen ({navigation})  {
 
   const [user, setUser] = useState();
@@ -15,9 +15,9 @@ export default function SigninScreen ({navigation})  {
   const [auth, setAuth] = useState(false);
   const [hasAccount, setHasAccount] = useState(true);
   const firebase = useContext(FirebaseContext);
- const [tk, setTk] = useState(null);
+  const [tk, setTk] = useState(null);
   const [token, setToken] = useContext(TokenContext);
-
+  const [loaded, setLoaded] = useState(true);
 
   useEffect(() => {
     if(tk){
@@ -33,15 +33,15 @@ export default function SigninScreen ({navigation})  {
           authorization: "Bearer " + tk,
         }
     });
-    console.log("23232", res.data)
     if(res.data === 'Verified')
     {
+      setLoaded(true);
       setToken(({
         token: tk,
         isLoggedIn: true,
       }))
     }
-    else Alert.alert('Wrong token')
+    else alert('Wrong token')
   } catch(err){
     console.log("22222", err);
   }
@@ -50,6 +50,7 @@ export default function SigninScreen ({navigation})  {
 
 
   const handleLogin = async () => {
+    setLoaded(false);
     const tk = await firebase.signIn(email,password);
     setTk(tk);
     //console.log("123 ", tk)
@@ -64,6 +65,14 @@ export default function SigninScreen ({navigation})  {
       style={{flex: 1}}
     >
       <View  style={styles.Container}>
+        <Modal
+          animationType="slide"
+          visible={!loaded}>
+          <View style={styles.LoadingStyle}>
+            <ActivityIndicator size="large" color="#000" />
+              <Text> Chờ chút nhé...</Text>
+          </View>
+        </Modal>  
         <View style={styles.LogoSpace}>
           <Image
           source = {require('../assets/thuthaostore.jpg')}
@@ -151,6 +160,20 @@ const styles = StyleSheet.create({
   },
   SignUpText:{
     color: '#76c4d7'
-  }
-  
+  },
+  LoadingStyle:{
+    margin: 10,
+    backgroundColor: "#efb65b",
+    borderRadius: 20,
+    padding: 20,
+    alignItems: "center",
+    shadowColor: "#fff",
+    shadowOffset:{
+      width: 0,
+      height:2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius:4,
+    elevation: 5
+},
 })

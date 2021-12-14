@@ -53,7 +53,7 @@ export default function ListClientsScreen(props){
         <TextInput 
           //style={styles.SearchBar}
           value={search}
-          placeholder="Search Here"
+          placeholder="Tìm kiếm khách hàng"
           onChangeText={(text) => searchFilter(text)}
         />
       </View>

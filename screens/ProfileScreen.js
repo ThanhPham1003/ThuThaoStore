@@ -1,27 +1,31 @@
 
 import React, { useContext, useState, useEffect } from "react";
-import {View, Text, StyleSheet, Image,TouchableOpacity, Alert, TextInput} from 'react-native';
+import {View, Text, StyleSheet, Image,TouchableOpacity,  TextInput} from 'react-native';
 import API from '../config/environmentVariables';
 import axios from "axios";
 import * as ImagePicker from 'expo-image-picker';
 import { TokenContext, TokenProvider } from '../context/TokenContext';
 import {FirebaseContext} from '../context/FirebaseContext'
+import { UserUpdatedContext } from "../context/UserUpdatedContext";
 export default function ProfileScreen(props){
     const {navigation} = props;
     const [product, setProduct] = useState({});
     const firebase = useContext(FirebaseContext);
     const [token, setToken] = useContext(TokenContext);
+    const [reload, setReload] = useContext(UserUpdatedContext);
     const [image, setImage] = useState(null);
     const [imageEditing, setImageEditing] = useState(null);
     const [name, setName] = useState('');
     const [age, setAge] = useState('');
+    const [today, setToday] = useState('')
     const [isEditing, setIsEditing] = useState(false);
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [isChangingPassword, setIsChangingPassword] = useState('');
     useEffect(() => {
         fetchData();
-    },[])
+        setReload({isUpdated: false});
+    },[reload.isUpdated])
     useEffect(() => {
         (async () => {
           if (Platform.OS !== 'web') {
@@ -48,7 +52,7 @@ export default function ProfileScreen(props){
         const url = API.BASE_URL + res.data.url;
         //console.log("hihi", url);
         let path2 = url.replace(/\\/g, "/");
-        //console.log("hoho", path2);
+        console.log("hoho", path2);
 
         setImageEditing(path2);
         setImage(path2);
@@ -105,7 +109,7 @@ export default function ProfileScreen(props){
             }
       
         });
-        //Alert.alert(res.data);
+        Alert.alert(res.data);
         fetchData();
         setIsEditing(false);
     }
@@ -136,13 +140,13 @@ export default function ProfileScreen(props){
                             />
                         </TouchableOpacity>
                         <View style={styles.EditSpace}>
-                            <Text style={styles.InformationText}>Name: </Text>
+                            <Text style={styles.InformationText}>Tên: </Text>
                             <TextInput style={styles.PasswordInput}
                             value= {name}
                             onChangeText={(text) => setName(text)} />
                         </View>
                         <View style={styles.EditSpace}>
-                            <Text style={styles.InformationText}>Age:  </Text>
+                            <Text style={styles.InformationText}>Tuổi:  </Text>
                             <TextInput style={styles.PasswordInput}
                             value= {age}
                             keyboardType={'decimal-pad'}
@@ -150,11 +154,11 @@ export default function ProfileScreen(props){
                         </View>
                         <View style={styles.ButtonExtra}>
                             <TouchableOpacity style={styles.ButtonStyle} onPress={updateData}>
-                                <Text> Save </Text>
+                                <Text> Lưu </Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.ButtonStyle}
                                     onPress={() => setIsEditing(false)}>
-                                        <Text>ComeBack</Text>
+                                        <Text>Quay Lại</Text>
                             </TouchableOpacity>
                         </View>
                     </>
@@ -163,14 +167,14 @@ export default function ProfileScreen(props){
                     {isChangingPassword ? (
                         <>
                             <View style={styles.EditSpace}>
-                            <Text style={styles.InformationText}>Current Password: </Text>
+                            <Text style={styles.InformationText}>Mật khẩu hiện tại: </Text>
                             <TextInput style={styles.PasswordInput}
                             value= {currentPassword}
                             secureTextEntry={true}
                             onChangeText={(text) => setCurrentPassword(text)} />
                             </View>
                             <View style={styles.EditSpace}>
-                                <Text style={styles.InformationText}>New Password:  </Text>
+                                <Text style={styles.InformationText}>Mật khẩu mới:  </Text>
                                 <TextInput style={styles.PasswordInput}
                                 value= {newPassword}
                                 secureTextEntry={true}
@@ -178,11 +182,11 @@ export default function ProfileScreen(props){
                             </View>
                             <View style={styles.ButtonExtra}>
                                 <TouchableOpacity style={styles.ButtonStyle} onPress={changePassword}>
-                                    <Text> Chage </Text>
+                                    <Text> Đổi Mật Khẩu </Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.ButtonStyle}
                                     onPress={() => setIsChangingPassword(false)}>
-                                    <Text>ComeBack</Text>
+                                    <Text>Quay Lại</Text>
                                 </TouchableOpacity>
                             </View>    
                         </>
@@ -195,29 +199,27 @@ export default function ProfileScreen(props){
                                 <Text style={styles.UserText}> {product.name}</Text>
                             </View>
                             <View style={styles.UserInformation}>
-                            
                                         <Text style={styles.InformationText}> Email: {product.email}</Text>
-                                        <Text style={styles.InformationText}> Age: {product.age}</Text>
-                                        <Text style={styles.InformationText}> Join Date: 10/03/1999</Text>
-
-                                
+                                        <Text style={styles.InformationText}> Tuổi: {product.age}</Text>
+                                        <Text style={styles.InformationText}> Doanh Thu Tháng Trước: {product.lastsells}</Text>
+                                        <Text style={styles.InformationText}> Doanh Thu Tháng Này: {product.currentsells}</Text>
                             </View>
                             <View style={styles.ButtonSpace}>
                                 <View style={styles.EditAndChangeSpace}>
                                     <TouchableOpacity style={styles.ButtonStyle}
                                     onPress={() => setIsEditing(true)}
                                     >
-                                        <Text>Edit Profile</Text>
+                                        <Text>Sửa Thông Tin</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity style={styles.ButtonStyle}
                                     onPress={() => setIsChangingPassword(true)}>
-                                        <Text>Chage Password</Text>
+                                        <Text>Đổi Mật Khẩu</Text>
                                     </TouchableOpacity>
                                 </View>
                                 <TouchableOpacity style={styles.ButtonStyle}
                                 onPress={logOut}
                                 >
-                                    <Text>LogOut</Text>
+                                    <Text>Đăng Xuất</Text>
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.LogOutSpace}>
@@ -235,7 +237,7 @@ const styles = StyleSheet.create({
         flex:1,
         //justifyContent: 'center',
         
-        backgroundColor: '#f9e3bd',
+        backgroundColor: '#f5ceb2',
     },
     ExtraSpace:{
         alignItems: 'center',
@@ -244,6 +246,7 @@ const styles = StyleSheet.create({
     ImageAndUserSpace:{
         alignItems: 'center',
         flex: 4,
+        marginBottom: 15,
     },
     ImageStyle:{
 
@@ -279,13 +282,14 @@ const styles = StyleSheet.create({
     },
     UserInformation:{
         flex: 3,
+        marginLeft: 20,
     },
     EditSpace:{
         flexDirection: 'row'
     },
     InformationText:{
         //fontSize:20,
-        marginTop: 40,
+        marginTop: 20,
     },
     ButtonSpace:{
         flex: 3,

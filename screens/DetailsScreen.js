@@ -58,6 +58,22 @@ export default DetailsScreen = ({route,navigation}) => {
         setOrders(res2.data);
 
     }
+    const handleDelete = () =>{
+        Alert.alert(
+          "CHÚ Ý",
+          "Bạn có chắc chắn muốn xóa không?",
+          [
+            {
+              text:" Hủy bỏ",
+              onPress: () => console.log("Hủy bỏ")
+            },
+            {
+              text: "Xác nhận", onPress: () => deleteData()
+    
+            }
+          ]
+        )
+      }
     const deleteData = async () => {
         const add = API.BASE_URL + "products/" + id;
         const res = await axios.delete(add, {
@@ -83,6 +99,7 @@ export default DetailsScreen = ({route,navigation}) => {
                     }
                 });
         Alert.alert(res.data)
+        console.log("3333", res.data)
         fetchData();
         setIsEditing(false);
         setIsUpdated({isUpdated: true});
@@ -116,27 +133,27 @@ export default DetailsScreen = ({route,navigation}) => {
                                 onChangeText={(text) => setNewCode(text)} />
                             </View>
                             <View style={styles.EditInputSpace}>
-                                <Text style={styles.ProductSpecsText}>Quantity:  </Text>
+                                <Text style={styles.ProductSpecsText}>Số Lượng:  </Text>
                                 <TextInput style={styles.EditInput}
                                 value= {newOrderQuantity}
                                 onChangeText={(text) => setNewOrderQuantity(text)} />
                             </View>
                             <View style={styles.EditInputSpace}>
-                                <Text style={styles.ProductSpecsText}>Day Submitted:  </Text>
+                                <Text style={styles.ProductSpecsText}>Ngày Đăng:  </Text>
                                 <TextInput style={styles.EditInput}
                                 value= {newDaySubmitted}
                                 onChangeText={(text) => setNewDaySubmitted(text)} />
                             </View>
 
                             <View style={styles.EditInputSpace}>
-                                <Text style={styles.ProductSpecsText}>Cost: </Text>
+                                <Text style={styles.ProductSpecsText}>Giá Nhập: </Text>
                                 <TextInput style={styles.EditInput}
                                 value= {newCost}
                                 keyboardType={'decimal-pad'}
                                 onChangeText={(text) => setNewCost(text)} />
                             </View>
                             <View style={styles.EditInputSpace}>
-                                <Text style={styles.ProductSpecsText}>Sell: </Text>
+                                <Text style={styles.ProductSpecsText}>Giá Bán: </Text>
                                 <TextInput style={styles.EditInput}
                                 value= {newSell}
                                 keyboardType={'decimal-pad'}
@@ -146,7 +163,7 @@ export default DetailsScreen = ({route,navigation}) => {
                     </View>
                     <View style={styles.ButtonSpaceEdit}>
                         <TouchableOpacity style={styles.ButtonStyle} onPress={updateData}>
-                            <Text> Save </Text>
+                            <Text> Lưu </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -158,13 +175,13 @@ export default DetailsScreen = ({route,navigation}) => {
                     </View>
                     <View style={styles.ProductSpecs}>
                         <View style={styles.HalfProductSpecs}>
-                            <Text style={styles.ProductSpecsText}>Cost: {product.cost}</Text>
-                            <Text style={styles.ProductSpecsText}>Quantity: {product.orderquantity}</Text>
-                            <Text style={styles.ProductSpecsText}>Day Submitted: {product.daysubmitted}</Text>
-                            <Text style={styles.ProductSpecsText}>List Order: </Text>
+                            <Text style={styles.ProductSpecsText}>Giá Nhập: {product.cost}</Text>
+                            <Text style={styles.ProductSpecsText}>Số Lượng: {product.orderquantity}</Text>
+                            <Text style={styles.ProductSpecsText}>Ngày Đăng: {product.daysubmitted}</Text>
+                            <Text style={styles.ProductSpecsText}>Danh sách người mua: </Text>
                         </View>
                         <View style={styles.HalfProductSpecs}>
-                            <Text style={styles.ProductSpecsText}>Sell: {product.sell}</Text>
+                            <Text style={styles.ProductSpecsText}>Giá Bán: {product.sell}</Text>
                             <Text style={styles.ProductSpecsText}>Code: {product.code} </Text>
                         </View>
                         {/* <Text style={styles.ProductSpecsText}>Date submit: {product.date}</Text> */}
@@ -181,11 +198,11 @@ export default DetailsScreen = ({route,navigation}) => {
                     </View>
                 
                     <View style={styles.ButtonSpace}>
-                        <TouchableOpacity style={styles.ButtonStyle} onPress={deleteData}>
-                            <Text> Delete </Text>
+                        <TouchableOpacity style={styles.ButtonStyle} onPress={handleDelete}>
+                            <Text> Xóa </Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.ButtonStyle} onPress={() => setIsEditing(true)}>
-                            <Text> Edit</Text>
+                            <Text> Chỉnh Sửa</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

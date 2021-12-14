@@ -66,17 +66,11 @@ const sendData = async(tk) =>{
       }
 
   });
-  if(res.data === 'Successfully')
-    {
       setLoaded(true);
       setToken(({
         token: tk,
         isLoggedIn: true,
       }))
-
-    }
-  
-  
   setName('');
   setAge('');
   setImage(null);
@@ -85,11 +79,6 @@ const sendData = async(tk) =>{
 const uploadImage = async () => {
   await pickImage();
 }
-
-
-
-
-
   const handleSignUp = async () => {
     setLoaded(false);
     const tk = await firebase.signUp(email, password);

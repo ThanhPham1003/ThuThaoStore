@@ -23,9 +23,9 @@ export default MainStackScreens = () => {
 
       <MainStack.Navigator screenOptions={screenOptions}>
         <MainStack.Screen name="Thu Thao Store" component={TabStackScreens} />
-        <MainStack.Screen name="Details" component={DetailsScreen} />
-        <MainStack.Screen name="Client" component={ListClientsScreen} />
-        <MainStack.Screen name="Client Details" component={ClientScreen} />
+        <MainStack.Screen name="Sản Phẩm" component={DetailsScreen} />
+        <MainStack.Screen name="Khách Hàng" component={ListClientsScreen} />
+        <MainStack.Screen name="Thông Tin" component={ClientScreen} />
         <MainStack.Screen name="Order" component={OrderScreen} />
         {/* <AuthStack.Screen name="Home" component={HomeScreen} />
         <AuthStack.Screen name="Details" component={DetailsScreen} /> */}

@@ -17,7 +17,7 @@ export default ProductCard = (props) => {
 
     const gotoDetails = (id) => {
 
-      navigation.navigate('Details',{id})
+      navigation.navigate('Sản Phẩm',{id})
     }
     const gotoOrder = (product) => {
       navigation.navigate('Order', {product, navigation})
@@ -37,9 +37,9 @@ export default ProductCard = (props) => {
             </TouchableOpacity>
             <View style={styles.ProductInfo}>
                 <Text> Code: {item.code}  </Text>
-                <Text> Quantity: {item.orderquantity} </Text>
-                <Text> Cost: {item.cost}  </Text>
-                <Text> Sell: {item.sell}  </Text>
+                <Text> Số lượng: {item.orderquantity} </Text>
+                <Text> Giá Nhập: {item.cost}  </Text>
+                <Text> Giá Bán: {item.sell}  </Text>
             </View>
           </View>
           <View style ={styles.PlusBottom}>
