@@ -7,7 +7,7 @@ import {FirebaseContext} from '../context/FirebaseContext'
 import * as ImagePicker from 'expo-image-picker';
 import API from '../config/environmentVariables';
 import {MaterialIcons} from '@expo/vector-icons'
-import RNPickerSelect from 'react-native-picker-select'
+import RNPickerSelect from 'react-native-picker-select';
 import Modal from 'react-native-modal';
 export default function PostProductScreen(props){
     const {navigation} = props;
@@ -18,6 +18,7 @@ export default function PostProductScreen(props){
     const [orderquantity, setOrderQuantity] =  useState('');
     const [cost, setCost] = useState('');
     const [sell, setSell] = useState('');
+    const [ctvprice, setCtvPrice] = useState('');
     const [daysubmitted, setDaysubmitted] = useState('');
     const [status, setStatus] = useState('status');
     const [image, setImage] = useState(null);
@@ -56,6 +57,7 @@ export default function PostProductScreen(props){
         data.append('name', name);
         data.append('cost', cost);
         data.append('sell', sell);
+        data.append('ctvprice', ctvprice);
         data.append('code', code);
         data.append('orderquantity', orderquantity);
         data.append('daysubmitted', daysubmitted)
@@ -83,6 +85,7 @@ export default function PostProductScreen(props){
         setCode('');
         setOrderQuantity('');
         setImage(null);
+        setCtvPrice('');
     }
 
     const uploadImage = async () => {
@@ -128,10 +131,17 @@ export default function PostProductScreen(props){
                 />
                 <TextInput
                     style={styles.ProductInput}
-                    placeholder='Giá Bán'
+                    placeholder='Giá Bán Lẻ'
                     keyboardType={'decimal-pad'}
                     onChangeText={sell => setSell(sell)}
                     value={sell}
+                />
+                <TextInput
+                    style={styles.ProductInput}
+                    placeholder='Giá CTV'
+                    keyboardType={'decimal-pad'}
+                    onChangeText={ctvprice => setCtvPrice(ctvprice)}
+                    value={ctvprice}
                 />
                 <TextInput
                     style={styles.ProductInput}
@@ -204,7 +214,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#e7eaed',
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 30,
+        margin: 20,
     },
     ProductImage:{
         width: '90%',

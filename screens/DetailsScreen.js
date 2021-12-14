@@ -44,6 +44,7 @@ export default DetailsScreen = ({route,navigation}) => {
                 authorization: "Bearer " + token.token,
               }
         });
+        console.log("44444", res.data)
         setProduct(res.data);
         const image = API.BASE_URL + res.data.url; 
         let path2 = image.replace(/\\/g, "/");
@@ -180,7 +181,8 @@ export default DetailsScreen = ({route,navigation}) => {
                             <Text style={styles.ProductSpecsText}>Danh sách người mua: </Text>
                         </View>
                         <View style={styles.HalfProductSpecs}>
-                            <Text style={styles.ProductSpecsText}>Giá Bán: {product.sell}</Text>
+                            <Text style={styles.ProductSpecsText}>Giá Bán Lẻ: {product.sell}</Text>
+                            <Text style={styles.ProductSpecsText}>Giá Cộng Tác Viên: {product.ctvprice}</Text>
                             <Text style={styles.ProductSpecsText}>Code: {product.code} </Text>
                         </View>
                         {/* <Text style={styles.ProductSpecsText}>Date submit: {product.date}</Text> */}

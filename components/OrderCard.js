@@ -39,7 +39,7 @@ export default OrderCard = (props) => {
           }
     });
     setProduct(res.data);
-
+    console.log("4444", res.data)
     const uid = firebase.getCurrentUser().uid;
     const add2 = API.BASE_URL + "users/" + uid;
     const res2 = await axios.get(add2, {

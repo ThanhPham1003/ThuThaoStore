@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput, FlatList,Image, Ke
 import { TokenContext, TokenProvider } from '../context/TokenContext';
 import API from '../config/environmentVariables';
 import ClientCardOrder from '../components/ClientCardOrder';
+import RNPickerSelect from 'react-native-picker-select';
 export default function OrderScreen({route, props}){
   const {product, navigation} = route.params;  
   //const {navigation} = props;
@@ -18,10 +19,13 @@ export default function OrderScreen({route, props}){
   const [clients, setClients] = useState([]);
   const [filterClients, setFilterClients] = useState([]);
   const [search, setSearch] = useState('');  
-  
+  const [price, setPrice] = useState('');
   useEffect(() => {
       fetchData(token);
   },[])
+  useEffect(() => {
+    console.log("44444", price)
+  }, [price])
   const fetchData = async (token) => {
       const res = await axios.get(API.BASE_URL +"clients",{
         headers: {
@@ -51,7 +55,7 @@ export default function OrderScreen({route, props}){
   }
   const sendData = async () => {
     let costs = parseInt(product.cost) * parseInt(amount);
-    let sells = parseInt(product.sell) * parseInt(amount);
+    let sells = parseInt(price) * parseInt(amount);
 
     const res = await axios.post( API.BASE_URL + "orders" ,{productname: product.name,productid: product._id, clientname: clientName,phone: phone,clientid: clientID, type: type, amount: amount,deposit: deposit, costs: costs, sells: sells, dayordered: dayordered}, {
         headers: {
@@ -121,6 +125,16 @@ export default function OrderScreen({route, props}){
                         onChangeText={dayordered => setDayordered(dayordered)}
                         value={dayordered}
                     />
+                    <View style={styles.OrderInput}>
+                    <RNPickerSelect
+                      placeholder={{label : "Chọn giá bán", value: "Giá bán"}}
+                      onValueChange={(itemValue) => setPrice(itemValue)}
+                      items={[
+                        { label : "Giá CTV", value: product.ctvprice },
+                        { label: "Giá Bán Lẻ", value: product.cell}
+
+                    ]} />
+                </View>
                     <TouchableOpacity style={styles.SendBot} onPress={() => sendData()}>
                         <Text> Lưu Order </Text>
                     </TouchableOpacity>
