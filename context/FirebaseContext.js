@@ -1,11 +1,14 @@
 import React, {useContext,useState, createContext} from "react";
-
+import axios from 'axios';
+import API from '../config/environmentVariables';
 import firebase from "firebase";
 import 'firebase/auth';
 import config from '../config/fire';
 import { TokenContext, TokenProvider } from '../context/TokenContext';
+import { Alert } from "react-native";
 //import {  } from "react-native";
 //const [_, setToken] = useContext(TokenContext)
+
 const FirebaseContext = createContext()
 
 if(!firebase.apps.length){
@@ -15,6 +18,7 @@ if(!firebase.apps.length){
 
 
 const Firebase = {
+  
   getCurrentUser: () => {
     return firebase.auth().currentUser
   },
@@ -101,11 +105,79 @@ const Firebase = {
       alert(err.message);
     });
     return cp;
+  },
+  getBlod: async (uri) => {
+    return await new Promise((resolve, reject) =>{
+      const xhr = new XMLHttpRequest()
+      xhr.onload = () =>{
+        resolve(xhr.response)
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET",uri,true);
+      xhr.send(null);
+
+    })
+  },
+  uploadProduct: async (name, cost, sell, ctvprice, code, orderquantity, daysubmitted, status, uri, token) =>{
+    const uid = Firebase.getCurrentUser().uid;
+    try{
+      const photo = await Firebase.getBlod(uri);
+      
+      const path = `photos/${uid}/${Date.now()}.jpg`
+      const imageRef = firebase.storage().ref(path);
+      console.log("2222", JSON.stringify(photo));
+      await imageRef.put(photo);
+
+      const url = await imageRef.getDownloadURL();
+      const res = await axios.post( API.BASE_URL + "products/allproducts", {uid: uid, name: name, cost: cost, sell: sell, ctvprice: ctvprice, code: code, orderquantity: orderquantity, daysubmitted: daysubmitted, status: status, url: url}, {
+        headers: {
+            authorization: "Bearer " + token,
+        }
+    });
+    Alert.alert(res.data);
+
+  }catch(error){
+    alert(error);
+    console.log(error);
   }
+  },
+  deleteProductImage: async(url) => {
+    const uid = Firebase.getCurrentUser().uid;
+    const desertRef = firebase.storage().refFromURL(url);
+    desertRef.delete().then(function() {}).catch(function(error){
+      alert(error)
+    });
+  },
+  updateProfileUser: async (name, age, uri, token) => {
+    const uid = Firebase.getCurrentUser().uid;
+    const add = API.BASE_URL + "users/" + uid;
+    try{
+      const photo = await Firebase.getBlod(uri);
+      const path = `avatars/${uid}/${Date.now()}`
+
+      const imageRef = firebase.storage().ref(path);
+      console.log("4444444", JSON.stringify(photo));
+      await imageRef.put(photo);
+      
+      const url = await imageRef.getDownloadURL();
+
+    
+      const res = await axios.post(add,{name: name, age: age, url: url},{
+        headers: {
+            authorization: "Bearer " + token,
+        }
+  
+    });
+    Alert.alert(res.data);
+    }catch(error){
+      alert(error);
+      console.log(error);
+    }
+  }
+
 }
 
 const FirebaseProvider = (props) => {
   return <FirebaseContext.Provider value={Firebase}>{props.children}</FirebaseContext.Provider>
 }
-
 export {FirebaseContext, FirebaseProvider}

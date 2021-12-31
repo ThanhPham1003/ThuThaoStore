@@ -8,11 +8,6 @@ export default ProductCard = (props) => {
     const {item} = data;
     const [image, setImage] = useState('');
     const [id, setID] = useState();
-    useEffect(() => {
-      const url = API.BASE_URL + item.url;
-      let path2 = url.replace(/\\/g, "/");
-      setImage(path2)
-    })
 
 
     const gotoDetails = (id) => {
@@ -26,7 +21,7 @@ export default ProductCard = (props) => {
     <View style={styles.Container}>
         <View style={styles.ProductContainer}>
           <Image
-          source = {{uri: image}}
+          source = {{uri: item.url}}
           style={styles.ProductImage} />
           <View style={styles.ProductTittleAndInfo}>
             <TouchableOpacity

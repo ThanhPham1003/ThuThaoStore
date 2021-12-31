@@ -3,6 +3,7 @@ import { View, Text,StyleSheet, TouchableOpacity, Image, FlatList, Alert } from 
 import axios from "axios";
 import { TextInput } from "react-native-gesture-handler";
 import { TokenContext, TokenProvider } from '../context/TokenContext';
+import {FirebaseContext} from '../context/FirebaseContext'
 import { HomeUpdatedContext, HomeUpdatedProvider } from '../context/HomeUpdatedContext';
 import API from '../config/environmentVariables';
 import ClientCardDetail from "../components/ClientCardDetail";
@@ -10,6 +11,7 @@ import ClientCardOrdered from "../components/ClientCardOrdered";
 
 export default DetailsScreen = ({route,navigation}) => {
     const {id} = route.params;
+    const firebase = useContext(FirebaseContext);
     const [product, setProduct] = useState({});
     const [orders, setOrders] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
@@ -44,11 +46,9 @@ export default DetailsScreen = ({route,navigation}) => {
                 authorization: "Bearer " + token.token,
               }
         });
-        console.log("44444", res.data)
+    
         setProduct(res.data);
-        const image = API.BASE_URL + res.data.url; 
-        let path2 = image.replace(/\\/g, "/");
-        setImage(path2)
+        setImage(res.data.url)
 
         const add2 = API.BASE_URL + "orders/products/" + res.data._id;
         const res2  = await axios.get(add2,{
@@ -77,11 +77,13 @@ export default DetailsScreen = ({route,navigation}) => {
       }
     const deleteData = async () => {
         const add = API.BASE_URL + "products/" + id;
+        await firebase.deleteProductImage(image);
         const res = await axios.delete(add, {
             headers: {
                 authorization: "Bearer " + token.token,
               }
         });
+
         Alert.alert(res.data)
         setIsUpdated({isUpdated: true});
         navigation.navigate('Thu Thao Store');

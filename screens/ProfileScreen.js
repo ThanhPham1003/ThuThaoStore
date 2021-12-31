@@ -49,13 +49,9 @@ export default function ProfileScreen(props){
             }
         });
         setProduct(res.data);
-        const url = API.BASE_URL + res.data.url;
-        //console.log("hihi", url);
-        let path2 = url.replace(/\\/g, "/");
-        console.log("hoho", path2);
 
-        setImageEditing(path2);
-        setImage(path2);
+        setImageEditing(res.data.url);
+        setImage(res.data.url);
         setName(res.data.name);
         setAge(res.data.age);
     }   
@@ -73,43 +69,31 @@ export default function ProfileScreen(props){
     };
     const updateData = async () => {
         
-        const uid = firebase.getCurrentUser().uid;
-        const add = API.BASE_URL + "users/" + uid;
-        const addImage = API.BASE_URL + "users/photo" + uid;
-        const userImage ={uri: imageEditing,
-            type: 'image',
-            name: imageEditing,}
-        const data = new FormData();
-        data.append('name', name);
-        data.append('age', age);
-        data.append('_method', 'PATCH');
-        data.append('userImage', {
-            uri: imageEditing,
-            type: 'image',
-            name: imageEditing,
-          });
+        // const uid = firebase.getCurrentUser().uid;
+        // const add = API.BASE_URL + "users/" + uid;
+        // const addImage = API.BASE_URL + "users/photo" + uid;
+        // const userImage ={uri: imageEditing,
+        //     type: 'image',
+        //     name: imageEditing,}
+        // const data = new FormData();
+        // data.append('name', name);
+        // data.append('age', age);
+        // data.append('_method', 'PATCH');
+        // data.append('userImage', {
+        //     uri: imageEditing,
+        //     type: 'image',
+        //     name: imageEditing,
+        //   });
 
 
-        // const res1 = await axios.patch(addImage, {userImage: userImage},{
-        //         headers: {
-        //             authorization: "Bearer " + token.token,
-        //           }
-        //     })
-        // console.log("44444", res1);
-        
-        // const res2 = await axios.patch(add, {name: name, age: age},{
+        // const res = await axios.post(add,data,{
         //     headers: {
-        //       authorization: "Bearer " + token.token,
+        //         authorization: "Bearer " + token.token,
         //     }
-        // });
-
-        const res = await axios.post(add,data,{
-            headers: {
-                authorization: "Bearer " + token.token,
-            }
       
-        });
-        Alert.alert(res.data);
+        // });
+        // Alert.alert(res.data);
+        await firebase.updateProfileUser(name,age,imageEditing, token.token)
         fetchData();
         setIsEditing(false);
     }

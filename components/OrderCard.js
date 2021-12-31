@@ -19,13 +19,16 @@ export default OrderCard = (props) => {
   const [newAmount, setNewAmount] = useState('');
   const [newDeposit, setNewDeposit] = useState('');
   const [newDayOrdered, setNewDayOrdered] = useState('');
+  const [price, setPrice] = useState('');
   const [token, setToken] = useContext(TokenContext);
   const [reload, setReload] = useContext(UserUpdatedContext);
   useEffect(() => {
     fetchData();
   },[])
   useEffect(() => {
-    const {type= '', amount= '', deposit= '',dayordered= ''} = item
+    const {type= '', amount= '', deposit= '',dayordered= '', sells = ''} = item
+    const p = sells/amount;
+    setPrice(p);
     setNewType(type);
     setNewAmount(amount.toString());
     setNewDayOrdered(dayordered);
@@ -39,7 +42,6 @@ export default OrderCard = (props) => {
           }
     });
     setProduct(res.data);
-    console.log("4444", res.data)
     const uid = firebase.getCurrentUser().uid;
     const add2 = API.BASE_URL + "users/" + uid;
     const res2 = await axios.get(add2, {
@@ -163,7 +165,7 @@ export default OrderCard = (props) => {
               <View style={styles.RightInfo}>
                 <Text style={styles.ClientInfoText}> Ngày Đặt: {newDayOrdered}</Text>
                 <Text style={styles.ClientInfoText}> Trạng Thái: {product.status}</Text>
-                <Text style={styles.ClientInfoText}> Giá bán: {product.sell}</Text>
+                <Text style={styles.ClientInfoText}> Giá bán: {price}</Text>
               </View>
               <View style ={styles.Bottom}>
                   <TouchableOpacity style={styles.EachBut} onPress={() => setIsEditing(true)}>

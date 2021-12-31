@@ -62,7 +62,10 @@ export default function OrderScreen({route, props}){
             authorization: "Bearer " + token.token,
         }
     });
-    Alert.alert(res.data);
+    if(price === 0){
+      Alert.alert("Hãy chọn lại giá.")
+    }
+    else Alert.alert(res.data);
     setClientName('');
     searchFilter('');
     setType('');
@@ -127,11 +130,11 @@ export default function OrderScreen({route, props}){
                     />
                     <View style={styles.OrderInput}>
                     <RNPickerSelect
-                      placeholder={{label : "Chọn giá bán", value: "Giá bán"}}
+                      placeholder={{label : "Chọn giá bán", value: null}}
                       onValueChange={(itemValue) => setPrice(itemValue)}
                       items={[
                         { label : "Giá CTV", value: product.ctvprice },
-                        { label: "Giá Bán Lẻ", value: product.cell}
+                        { label: "Giá Bán Lẻ", value: product.sell}
 
                     ]} />
                 </View>

@@ -20,7 +20,7 @@ export default function PostProductScreen(props){
     const [sell, setSell] = useState('');
     const [ctvprice, setCtvPrice] = useState('');
     const [daysubmitted, setDaysubmitted] = useState('');
-    const [status, setStatus] = useState('status');
+    const [status, setStatus] = useState('');
     const [image, setImage] = useState(null);
     const [token, setToken] = useContext(TokenContext);
     const [reload, setReload] = useContext(HomeUpdatedContext);
@@ -51,35 +51,36 @@ export default function PostProductScreen(props){
 
     const sendData = async() =>{
         setLoaded(false)
-        const data  = new FormData()
-        const uid = firebase.getCurrentUser().uid;
-        data.append('uid', uid);
-        data.append('name', name);
-        data.append('cost', cost);
-        data.append('sell', sell);
-        data.append('ctvprice', ctvprice);
-        data.append('code', code);
-        data.append('orderquantity', orderquantity);
-        data.append('daysubmitted', daysubmitted)
-        data.append('status', status)
-        data.append('productImage', {
-            uri: image,
-            type: 'image',
-            name: image,
-          });
+        // const data  = new FormData()
+        // const uid = firebase.getCurrentUser().uid;
+        // data.append('uid', uid);
+        // data.append('name', name);
+        // data.append('cost', cost);
+        // data.append('sell', sell);
+        // data.append('ctvprice', ctvprice);
+        // data.append('code', code);
+        // data.append('orderquantity', orderquantity);
+        // data.append('daysubmitted', daysubmitted)
+        // data.append('status', status)
+        // data.append('productImage', {
+        //     uri: image,
+        //     type: 'image',
+        //     name: image,
+        //   });
 
-        const res = await axios.post( API.BASE_URL + "products/allproducts", data, {
-            headers: {
-                authorization: "Bearer " + token.token,
-            }
+        // const res = await axios.post( API.BASE_URL + "products/allproducts", data, {
+        //     headers: {
+        //         authorization: "Bearer " + token.token,
+        //     }
 
-        });
-        Alert.alert(res.data)
+        // });
+        
+        //Alert.alert(res.data)
+        await firebase.uploadProduct(name,cost,sell,ctvprice,code,orderquantity,daysubmitted,status,image, token.token);
         setLoaded(true);
         setReload({isUpdated: true})
         setName('');
         setDaysubmitted('');
-        setStatus('');
         setCost('')
         setSell('');
         setCode('');
@@ -165,7 +166,7 @@ export default function PostProductScreen(props){
 
                 <View style={styles.StatusPicker}>
                     <RNPickerSelect
-                    placeholder={{label : "Chọn trạng thái sản phẩm", value: "status"}}
+                    placeholder={{label : "Chọn trạng thái sản phẩm", value: null}}
                     onValueChange={(itemValue) => setStatus(itemValue)}
                     items={[
                         { label : "Có sẵn", value: "Có Sẵn" },
