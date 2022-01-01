@@ -8,21 +8,24 @@ import { NavigationContainer } from '@react-navigation/native';
 import { HomeUpdatedProvider } from './context/HomeUpdatedContext';
 import { ClientUpdatedContext, ClientUpdatedProvider } from './context/ClientUpdatedContext';
 import { UserUpdatedProvider } from './context/UserUpdatedContext';
+import { LoadingContext, LoadingProvider } from './context/LoadingContext';
 const App = () => {
   return(
-    <FirebaseProvider>
-      <TokenProvider>
-        <HomeUpdatedProvider>
-          <ClientUpdatedProvider>
-            <UserUpdatedProvider>
-              <NavigationContainer>
-                <AppStackScreens/>
-              </NavigationContainer>
-            </UserUpdatedProvider>
-          </ClientUpdatedProvider>
-        </HomeUpdatedProvider>  
-      </TokenProvider>
-    </FirebaseProvider>
+    <LoadingProvider>
+      <FirebaseProvider>
+        <TokenProvider>
+          <HomeUpdatedProvider>
+            <ClientUpdatedProvider>
+              <UserUpdatedProvider>
+                <NavigationContainer>
+                  <AppStackScreens/>
+                </NavigationContainer>
+              </UserUpdatedProvider>
+            </ClientUpdatedProvider>
+          </HomeUpdatedProvider>  
+        </TokenProvider>
+      </FirebaseProvider>
+    </LoadingProvider>
   )
 };
 
