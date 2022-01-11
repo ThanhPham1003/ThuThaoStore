@@ -8,7 +8,7 @@ import API from '../config/environmentVariables';
 import OrderCard from "../components/OrderCard";
 
 export default ClientScreen = ({route,navigation}) =>{
-  const {phone} = route.params;
+  const {id} = route.params;
   const [client, setClient] = useState({});
   const [orders, setOrders] = useState([]);
   const [deposit, setDeposit] = useState('');
@@ -35,13 +35,16 @@ export default ClientScreen = ({route,navigation}) =>{
 
 
   const fetchData = async () => {
-    const add = API.BASE_URL + "clients/" + phone;
+    console.log("11111111");
+    console.log("id", id)
+    const add = API.BASE_URL + "clients/" + id;
     const res  = await axios.get(add,{
       headers: {
           authorization: "Bearer " + token.token,
         }
     });
     setClient(res.data)
+    console.log(res.data)
     const add2 = API.BASE_URL + "orders/" + res.data._id;
     const res2  = await axios.get(add2,{
       headers: {
@@ -95,10 +98,15 @@ export default ClientScreen = ({route,navigation}) =>{
                         authorization: "Bearer " + token.token,
                     }
                 });
-        Alert.alert(res.data)
-        fetchData();
-        setReloadList({isUpdated: true})
-        setIsEditing(false);
+        Alert.alert("Thông báo", res.data,[
+          {
+            text: "OK", onPress: () => {
+              fetchData();
+              setReloadList({isUpdated: true})
+              setIsEditing(false);
+            }
+          }
+        ])
        
   }
   const reload = async () =>{
@@ -239,13 +247,15 @@ const styles = StyleSheet.create({
   },
   ClientInfo:{
     marginLeft: 20,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   LeftClientInfo:{
     flexDirection: 'column',
+    width:'50%',
   },
   RightClientInfo:{
     flexDirection: 'column',
+    width:'40%',
     marginLeft: 50,
   },
   ClientInfoText:{

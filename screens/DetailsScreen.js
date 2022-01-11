@@ -8,7 +8,7 @@ import { HomeUpdatedContext, HomeUpdatedProvider } from '../context/HomeUpdatedC
 import API from '../config/environmentVariables';
 import ClientCardDetail from "../components/ClientCardDetail";
 import ClientCardOrdered from "../components/ClientCardOrdered";
-
+import {OrderUpdatedContext} from '../context/OrderUpdatedContext'
 export default DetailsScreen = ({route,navigation}) => {
     const {id} = route.params;
     const firebase = useContext(FirebaseContext);
@@ -19,21 +19,26 @@ export default DetailsScreen = ({route,navigation}) => {
     const [newCost, setNewCost] = useState('');
     const [newSell, setNewSell] = useState('');
     const [newCode, setNewCode] = useState('');
+    const [newCtvPrice, setNewCtvPrice] = useState('');
     const [newOrderQuantity, setNewOrderQuantity] = useState('');
     const [newDaySubmitted, setNewDaySubmitted] = useState('');
     const [image, setImage] = useState('');
     const [token, setToken] = useContext(TokenContext);
     const [isUpdated, setIsUpdated] = useContext(HomeUpdatedContext);
+    const [isOrderUpdated, setIsOrderUpdated] = useContext(OrderUpdatedContext);
     useEffect(() => {
         fetchData();
-    },[])
+
+        setIsOrderUpdated({isUpdated: false});
+    },[isOrderUpdated.isUpdated])
 
     useEffect(() => {
-        const {name = '', cost = '', sell = '',code = '', orderquantity = '', daysubmitted= ''} = product
+        const {name = '', cost = '', sell = '',ctvprice = '', code = '', orderquantity = '', daysubmitted= ''} = product
         
         setNewName(name);
         setNewCost(cost.toString());
         setNewSell(sell.toString());
+        setNewCtvPrice(ctvprice.toString());
         setNewCode(code);
         setNewOrderQuantity(orderquantity);
         setNewDaySubmitted(daysubmitted);
@@ -46,7 +51,7 @@ export default DetailsScreen = ({route,navigation}) => {
                 authorization: "Bearer " + token.token,
               }
         });
-    
+        console.log("4444", res.data.url)
         setProduct(res.data);
         setImage(res.data.url)
 
@@ -57,6 +62,7 @@ export default DetailsScreen = ({route,navigation}) => {
               }
         });
         setOrders(res2.data);
+        console.log("33333", {orders})
 
     }
     const handleDelete = () =>{
@@ -77,16 +83,21 @@ export default DetailsScreen = ({route,navigation}) => {
       }
     const deleteData = async () => {
         const add = API.BASE_URL + "products/" + id;
-        await firebase.deleteProductImage(image);
-        const res = await axios.delete(add, {
-            headers: {
-                authorization: "Bearer " + token.token,
-              }
-        });
+        const message = await firebase.deleteProductImage(image);
+        if(!message){
+            Alert.alert("Error with deleting image from firebase");
+        }
+        else{
+            const res = await axios.delete(add, {
+                headers: {
+                    authorization: "Bearer " + token.token,
+                }
+            });
 
-        Alert.alert(res.data)
-        setIsUpdated({isUpdated: true});
-        navigation.navigate('Thu Thao Store');
+            Alert.alert(res.data)
+            setIsUpdated({isUpdated: true});
+            navigation.navigate('Thu Thao Store');
+        }
     }
     const updateData = async () => {
         const add = API.BASE_URL + "products/" + id;
@@ -94,6 +105,7 @@ export default DetailsScreen = ({route,navigation}) => {
                 name: newName,
                 cost: newCost,
                 sell: newSell,
+                ctvprice: newCtvPrice,
                 code: newCode,
                 orderquantity: newOrderQuantity,
                 daysubmitted: newDaySubmitted},{
@@ -161,6 +173,13 @@ export default DetailsScreen = ({route,navigation}) => {
                                 keyboardType={'decimal-pad'}
                                 onChangeText={(text) => setNewSell(text)} />
                             </View>
+                            <View style={styles.EditInputSpace}>
+                                <Text style={styles.ProductSpecsText}>Giá CTV: </Text>
+                                <TextInput style={styles.EditInput}
+                                value= {newCtvPrice}
+                                keyboardType={'decimal-pad'}
+                                onChangeText={(text) => setNewCtvPrice(text)} />
+                            </View>
 
                     </View>
                     <View style={styles.ButtonSpaceEdit}>
@@ -194,10 +213,10 @@ export default DetailsScreen = ({route,navigation}) => {
                     </View>
                     <View style={styles.List}>
                     <FlatList
-            data={orders}
-            renderItem={(item) => <ClientCardOrdered data={item} navigation={navigation}/> }
-            keyExtractor={(item, index) => index.toString()}
-          />
+                        data={orders}
+                        renderItem={(item) => <ClientCardOrdered data={item} navigation={navigation}/> }
+                        keyExtractor={(item, index) => index.toString()}
+                    />
                     </View>
                 
                     <View style={styles.ButtonSpace}>

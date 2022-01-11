@@ -2,13 +2,13 @@ import React, {useContext, useEffect} from 'react'
 import {View, Text, StyleSheet} from 'react-native'
 import LottieView from 'lottie-react-native'
 import {FirebaseContext} from '../context/FirebaseContext'
-import { LoadingContext } from '../context/LoadingContext'
-export default function LoadingScreen(){
+export default function LoadingScreen(props){
+  const {navigation} = props;
   const firebase = useContext(FirebaseContext)
-  const [_,setLoaded] = useContext(LoadingContext)
   useEffect(() =>{
     setTimeout(async () => {
-      setLoaded({isLoaded: true})
+      //setLoaded({isLoaded: true})
+      navigation.navigate("Sign in")
     }, 1000)
   },[])
   return(

@@ -1,15 +1,16 @@
 
 import React, { useContext, useState, useEffect } from "react";
-import {View, Text, StyleSheet, Image,TouchableOpacity,  TextInput} from 'react-native';
+import {View, Text, StyleSheet, Image,TouchableOpacity,  TextInput,ActivityIndicator, Alert} from 'react-native';
 import API from '../config/environmentVariables';
 import axios from "axios";
 import * as ImagePicker from 'expo-image-picker';
 import { TokenContext, TokenProvider } from '../context/TokenContext';
 import {FirebaseContext} from '../context/FirebaseContext'
 import { UserUpdatedContext } from "../context/UserUpdatedContext";
+import Modal from 'react-native-modal';
 export default function ProfileScreen(props){
     const {navigation} = props;
-    const [product, setProduct] = useState({});
+    const [product, setProduct] = useState('');
     const firebase = useContext(FirebaseContext);
     const [token, setToken] = useContext(TokenContext);
     const [reload, setReload] = useContext(UserUpdatedContext);
@@ -22,6 +23,7 @@ export default function ProfileScreen(props){
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [isChangingPassword, setIsChangingPassword] = useState('');
+    const [loaded, setLoaded] = useState(true);
     useEffect(() => {
         fetchData();
         setReload({isUpdated: false});
@@ -68,7 +70,7 @@ export default function ProfileScreen(props){
         }
     };
     const updateData = async () => {
-        
+        setLoaded(false)
         // const uid = firebase.getCurrentUser().uid;
         // const add = API.BASE_URL + "users/" + uid;
         // const addImage = API.BASE_URL + "users/photo" + uid;
@@ -93,12 +95,15 @@ export default function ProfileScreen(props){
       
         // });
         // Alert.alert(res.data);
-        await firebase.updateProfileUser(name,age,imageEditing, token.token)
+        const message = await firebase.updateProfileUser(name,age,imageEditing, token.token)
+        Alert.alert(message)
         fetchData();
+        setLoaded(true);
         setIsEditing(false);
     }
     const changePassword = async () => {
-        await firebase.changePassword(currentPassword,newPassword);
+        const message = await firebase.changePassword(currentPassword,newPassword);
+        alert(message)
         setIsChangingPassword(false);
     }
     const uploadImageEditing = async () => {
@@ -116,6 +121,14 @@ export default function ProfileScreen(props){
 
     return(
         <View style = {styles.Container}>
+            <Modal
+            animationType="slide"
+            visible={!loaded}>
+            <View style={styles.LoadingStyle}>
+                <ActivityIndicator size="large" color="#000" />
+                <Text> Chờ chút nhé...</Text>
+            </View>
+        </Modal>
             {isEditing ? (
                     <>
                         <TouchableOpacity onPress={uploadImageEditing}>
@@ -180,13 +193,13 @@ export default function ProfileScreen(props){
                                 <Image source={{uri: image}}
                                     style={styles.ImageStyle}
                                 />
-                                <Text style={styles.UserText}> {product.name}</Text>
+                                <Text style={styles.UserText}> {product.name || '-'}</Text>
                             </View>
                             <View style={styles.UserInformation}>
-                                        <Text style={styles.InformationText}> Email: {product.email}</Text>
-                                        <Text style={styles.InformationText}> Tuổi: {product.age}</Text>
-                                        <Text style={styles.InformationText}> Doanh Thu Tháng Trước: {product.lastsells}</Text>
-                                        <Text style={styles.InformationText}> Doanh Thu Tháng Này: {product.currentsells}</Text>
+                                        <Text style={styles.InformationText}> Email: {product.email || '-'}</Text>
+                                        <Text style={styles.InformationText}> Tuổi: {product.age || '-'}</Text>
+                                        <Text style={styles.InformationText}> Doanh Thu Tháng Trước: {product.lastsells || '-'}</Text>
+                                        <Text style={styles.InformationText}> Doanh Thu Tháng Này: {product.currentsells || '-'}</Text>
                             </View>
                             <View style={styles.ButtonSpace}>
                                 <View style={styles.EditAndChangeSpace}>
@@ -312,5 +325,20 @@ const styles = StyleSheet.create({
         alignItems:'center',
         justifyContent: 'center',
 
-    }
+    },
+    LoadingStyle:{
+        margin: 10,
+        backgroundColor: "#efb65b",
+        borderRadius: 20,
+        padding: 20,
+        alignItems: "center",
+        shadowColor: "#fff",
+        shadowOffset:{
+          width: 0,
+          height:2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius:4,
+        elevation: 5
+    },
 })

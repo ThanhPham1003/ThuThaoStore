@@ -9,6 +9,7 @@ export default function ResetPasswordScreen({navigation}){
 
   const resetPassword = async () => {
     const reset = await firebase.resetPassword(email);
+    alert(reset)
   }
   return(
     <KeyboardAvoidingView

@@ -6,14 +6,14 @@ import API from '../config/environmentVariables';
 export default ClientCardDetail = (props) => {
   const {data, navigation, child} = props
   const {item} = data;
-  const details = (phone) => {
-    navigation.navigate('Thông Tin',{phone})
+  const details = (id) => {
+    navigation.navigate('Thông Tin',{id})
 }
   const setInfo = () => {
     child(item);
   }
   return(
-    <TouchableOpacity style = {styles.Container} onPress={() => details(item.phone)}>
+    <TouchableOpacity style = {styles.Container} onPress={() => details(item._id)}>
       
       <View style={styles.InfoContainer}>
           <Text style={styles.ClientTittleText}> {item.name} </Text>

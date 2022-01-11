@@ -76,17 +76,26 @@ export default function PostProductScreen(props){
         // });
         
         //Alert.alert(res.data)
-        await firebase.uploadProduct(name,cost,sell,ctvprice,code,orderquantity,daysubmitted,status,image, token.token);
-        setLoaded(true);
-        setReload({isUpdated: true})
-        setName('');
-        setDaysubmitted('');
-        setCost('')
-        setSell('');
-        setCode('');
-        setOrderQuantity('');
-        setImage(null);
-        setCtvPrice('');
+        const message = await firebase.uploadProduct(name,cost,sell,ctvprice,code,orderquantity,daysubmitted,status,image, token.token);
+
+        
+        Alert.alert("Thông báo",message,[
+            {
+                text: "OK", onPress: () => {
+                    setLoaded(true);
+                    setReload({isUpdated: true})
+                    setName('');
+                    setDaysubmitted('');
+                    setCost('')
+                    setSell('');
+                    setCode('');
+                    setOrderQuantity('');
+                    setImage(null);
+                    setCtvPrice('');
+                }
+            }
+        ]);
+        
     }
 
     const uploadImage = async () => {

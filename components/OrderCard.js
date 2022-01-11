@@ -7,7 +7,7 @@ import axios from "axios";
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { UserUpdatedContext } from '../context/UserUpdatedContext';
-
+import { OrderUpdatedContext } from '../context/OrderUpdatedContext';
 export default OrderCard = (props) => {
   const {data, navigation, child} = props
   const {item} = data;
@@ -20,8 +20,10 @@ export default OrderCard = (props) => {
   const [newDeposit, setNewDeposit] = useState('');
   const [newDayOrdered, setNewDayOrdered] = useState('');
   const [price, setPrice] = useState('');
+  const [status, setStatus] = useState('');
   const [token, setToken] = useContext(TokenContext);
   const [reload, setReload] = useContext(UserUpdatedContext);
+  const [isOrderUpdated, setIsOrderUpdated] = useContext(OrderUpdatedContext);
   useEffect(() => {
     fetchData();
   },[])
@@ -41,7 +43,8 @@ export default OrderCard = (props) => {
             authorization: "Bearer " + token.token,
           }
     });
-    setProduct(res.data);
+    if(!res.data) setStatus("Đã xóa");
+    else setStatus(res.data.status)
     const uid = firebase.getCurrentUser().uid;
     const add2 = API.BASE_URL + "users/" + uid;
     const res2 = await axios.get(add2, {
@@ -76,6 +79,7 @@ export default OrderCard = (props) => {
             authorization: "Bearer " + token.token,
           }
     });
+    setIsOrderUpdated({isUpdated: true})
     Alert.alert(res.data)
     child();
   }
@@ -164,7 +168,7 @@ export default OrderCard = (props) => {
               </View>
               <View style={styles.RightInfo}>
                 <Text style={styles.ClientInfoText}> Ngày Đặt: {newDayOrdered}</Text>
-                <Text style={styles.ClientInfoText}> Trạng Thái: {product.status}</Text>
+                <Text style={styles.ClientInfoText}> Trạng Thái: {status}</Text>
                 <Text style={styles.ClientInfoText}> Giá bán: {price}</Text>
               </View>
               <View style ={styles.Bottom}>

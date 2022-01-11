@@ -23,9 +23,6 @@ export default function OrderScreen({route, props}){
   useEffect(() => {
       fetchData(token);
   },[])
-  useEffect(() => {
-    console.log("44444", price)
-  }, [price])
   const fetchData = async (token) => {
       const res = await axios.get(API.BASE_URL +"clients",{
         headers: {
@@ -57,7 +54,7 @@ export default function OrderScreen({route, props}){
     let costs = parseInt(product.cost) * parseInt(amount);
     let sells = parseInt(price) * parseInt(amount);
 
-    const res = await axios.post( API.BASE_URL + "orders" ,{productname: product.name,productid: product._id, clientname: clientName,phone: phone,clientid: clientID, type: type, amount: amount,deposit: deposit, costs: costs, sells: sells, dayordered: dayordered}, {
+    const res = await axios.post( API.BASE_URL + "orders" ,{productname: product.name,productid: product._id,clientid: clientID, type: type, amount: amount,deposit: deposit, costs: costs, sells: sells, dayordered: dayordered}, {
         headers: {
             authorization: "Bearer " + token.token,
         }

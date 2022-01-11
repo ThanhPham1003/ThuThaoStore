@@ -17,10 +17,10 @@ export default function ListClientsScreen(props){
   const [filterClients, setFilterClients] = useState([]);
   const [search, setSearch] = useState('');
   useEffect(() => {
-    fetchClient(token);
+    fetchClient();
     setReload({isUpdated: false})
 }, [reload.isUpdated])
-  const fetchClient = async (token) =>{
+  const fetchClient = async () =>{
     const res = await axios.get(API.BASE_URL + "clients",{
       headers: {
         authorization: "Bearer " + token.token,
