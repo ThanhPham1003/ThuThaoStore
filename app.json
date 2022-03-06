@@ -10,9 +10,9 @@
     ],
     "name": "MobileShopApp",
     "slug": "MobileShopApp",
-    "version": "1.0.0",
+    "version": "1.0.4",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/iTunesArtwork@2x.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -26,7 +26,7 @@
     ],
     "ios": {
       "bundleIdentifier": "com.thuthaostore.thuthaostore",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.4"
     },
     "android": {
       "adaptiveIcon": {

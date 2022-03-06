@@ -44,7 +44,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
       //console.log(text)
       const newData = filterProducts.filter((item) => {
         //console.log(item.name);
-        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
+        const itemData = item.tenSP ? item.tenSP.toUpperCase() : ''.toUpperCase();
         const textData = text.toUpperCase();
         return itemData.indexOf(textData) > -1;
         //console.log(itemData.indexOf(textData))

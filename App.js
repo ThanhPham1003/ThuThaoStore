@@ -6,23 +6,18 @@ import { TokenProvider } from './context/TokenContext';
 import TabStackScreens from './stacks/TabStackScreens';
 import { NavigationContainer } from '@react-navigation/native';
 import { HomeUpdatedProvider } from './context/HomeUpdatedContext';
-import { ClientUpdatedContext, ClientUpdatedProvider } from './context/ClientUpdatedContext';
-import { UserUpdatedProvider } from './context/UserUpdatedContext';
-import { OrderUpdatedProvider } from './context/OrderUpdatedContext';
+import { HistoryUpdatedContext, HistoryUpdatedProvider } from './context/HistoryUpdatedContext';
+
 const App = () => {
   return (
     <FirebaseProvider>
       <TokenProvider>
         <HomeUpdatedProvider>
-          <ClientUpdatedProvider>
-            <UserUpdatedProvider>
-              <OrderUpdatedProvider>
-                <NavigationContainer>
-                  <AppStackScreens />
-                </NavigationContainer>
-              </OrderUpdatedProvider>
-            </UserUpdatedProvider>
-          </ClientUpdatedProvider>
+          <HistoryUpdatedProvider>
+              <NavigationContainer>
+                <AppStackScreens />
+              </NavigationContainer>
+          </HistoryUpdatedProvider>  
         </HomeUpdatedProvider>
       </TokenProvider>
     </FirebaseProvider>

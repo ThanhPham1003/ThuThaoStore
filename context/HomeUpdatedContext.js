@@ -3,7 +3,7 @@ const HomeUpdatedContext = createContext([{}, () => {}])
 
 const HomeUpdatedProvider = (props) => {
     const [state, setState] = useState({
-       isUpdated: false,
+       isHistoryUpdated: false,
     })
     return <HomeUpdatedContext.Provider value={[state, setState]}>{props.children}</HomeUpdatedContext.Provider>
 }

@@ -146,7 +146,6 @@ const Firebase = {
         await user.updatePassword(newPassword);
         message = "Đã đổi mật khẩu"
       } catch (err){
-        console.log('aaaaaaa', err);
         message = "Đổi mật khẩu không thành công vì lỗi firebase"
       }
     } catch {
@@ -167,7 +166,7 @@ const Firebase = {
 
     })
   },
-  uploadProduct: async (name, cost, sell, ctvprice, code, orderquantity, daysubmitted, status, uri, token) => {
+  uploadProduct: async (tenSP, code, giaNhap, giaBanLe, giaCTV, soluongNhap, soluongBanLe, soluongBanCTV, noiNhap, ngayDang, status, uri, token) => {
     const uid = Firebase.getCurrentUser().uid;
     try {
       const photo = await Firebase.getBlod(uri);
@@ -177,7 +176,7 @@ const Firebase = {
       await imageRef.put(photo);
 
       const url = await imageRef.getDownloadURL();
-      const res = await axios.post(API.BASE_URL + "products/allproducts", { uid: uid, name: name, cost: cost, sell: sell, ctvprice: ctvprice, code: code, orderquantity: orderquantity, daysubmitted: daysubmitted, status: status, url: url }, {
+      const res = await axios.post(API.BASE_URL + "products/allproducts", { uid: uid, tenSP: tenSP, code: code, giaNhap: giaNhap,giaBanLe: giaBanLe, giaCTV: giaCTV, soluongNhap: soluongNhap, soluongBanLe: soluongBanLe, soluongBanCTV: soluongBanCTV, noiNhap: noiNhap, ngayDang: ngayDang, status: status, url: url }, {
         headers: {
           authorization: "Bearer " + token,
         }
@@ -185,7 +184,6 @@ const Firebase = {
       return res.data;
 
     } catch (error) {
-      console.log(error);
       return "Error with sending product data to storage."
     }
   },
@@ -219,7 +217,6 @@ const Firebase = {
       return res.data;
     } catch (error) {
       return "Error with updating profile user";
-      console.log(error);
     }
   }
 

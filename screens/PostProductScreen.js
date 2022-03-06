@@ -13,13 +13,16 @@ export default function PostProductScreen(props){
     const {navigation} = props;
     const firebase = useContext(FirebaseContext);
     const [loaded, setLoaded] = useState(true);
-    const [name, setName] = useState('');
+    const [tenSP, setTenSP] = useState('');
     const [code, setCode] = useState('');
-    const [orderquantity, setOrderQuantity] =  useState('');
-    const [cost, setCost] = useState('');
-    const [sell, setSell] = useState('');
-    const [ctvprice, setCtvPrice] = useState('');
-    const [daysubmitted, setDaysubmitted] = useState('');
+    const [giaNhap, setGiaNhap] = useState('');
+    const [giaBanLe, setGiaBanLe] = useState('');
+    const [giaCTV, setGiaCTV] = useState('');
+    const [soluongNhap, setSoluongNhap] = useState('');
+    const [soluongBanLe, setSoluongBanLe] = useState('');
+    const [soluongBanCTV, setSoluongBanCTV] = useState('');
+    const [noiNhap, setNoiNhap] = useState('');
+    const [ngayDang, setNgayDang] = useState('');
     const [status, setStatus] = useState('');
     const [image, setImage] = useState(null);
     const [token, setToken] = useContext(TokenContext);
@@ -76,7 +79,7 @@ export default function PostProductScreen(props){
         // });
         
         //Alert.alert(res.data)
-        const message = await firebase.uploadProduct(name,cost,sell,ctvprice,code,orderquantity,daysubmitted,status,image, token.token);
+        const message = await firebase.uploadProduct(tenSP,code, giaNhap, giaBanLe, giaCTV,soluongNhap, soluongBanLe, soluongBanCTV, noiNhap, ngayDang,'1',image, token.token);
 
         
         Alert.alert("Thông báo",message,[
@@ -84,14 +87,17 @@ export default function PostProductScreen(props){
                 text: "OK", onPress: () => {
                     setLoaded(true);
                     setReload({isUpdated: true})
-                    setName('');
-                    setDaysubmitted('');
-                    setCost('')
-                    setSell('');
+                    setTenSP('');
                     setCode('');
-                    setOrderQuantity('');
+                    setGiaNhap('');
+                    setGiaBanLe('');
+                    setGiaCTV('');
+                    setSoluongNhap('');
+                    setSoluongBanLe('');
+                    setSoluongBanCTV('');
+                    setNoiNhap('');
+                    setNgayDang('');
                     setImage(null);
-                    setCtvPrice('');
                 }
             }
         ]);
@@ -105,9 +111,8 @@ export default function PostProductScreen(props){
     return(
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={{flex: 1}}
+            style={styles.Container}
         >
-            <View style ={styles.Container}>
             <Modal
                 animationType="slide"
                 visible={!loaded}>
@@ -116,6 +121,7 @@ export default function PostProductScreen(props){
                     <Text> Chờ chút nhé...</Text>
                 </View>
             </Modal>  
+            <View style={styles.AddImage}>
                 <TouchableOpacity style={styles.AddImageSpace} onPress={uploadImage}>
                     {image ?
                     <Image style={styles.ProductImage} source={{uri: image}} />
@@ -126,80 +132,103 @@ export default function PostProductScreen(props){
                     </>
                 }
                 </TouchableOpacity>
-                <TextInput
-                    style={styles.ProductInput}
-                    placeholder='Tên'
-                    onChangeText={name => setName(name)}
-                    value={name}
-                />
-                <TextInput
-                    style={styles.ProductInput}
-                    placeholder='Giá Nhập'
-                    keyboardType={'decimal-pad'}
-                    onChangeText={cost => setCost(cost)}
-                    value={cost}
-                />
-                <TextInput
-                    style={styles.ProductInput}
-                    placeholder='Giá Bán Lẻ'
-                    keyboardType={'decimal-pad'}
-                    onChangeText={sell => setSell(sell)}
-                    value={sell}
-                />
-                <TextInput
-                    style={styles.ProductInput}
-                    placeholder='Giá CTV'
-                    keyboardType={'decimal-pad'}
-                    onChangeText={ctvprice => setCtvPrice(ctvprice)}
-                    value={ctvprice}
-                />
-                <TextInput
-                    style={styles.ProductInput}
-                    placeholder='Code'
-                    onChangeText={code => setCode(code)}
-                    value={code}
-                />
-                < TextInput
-                   style={styles.ProductInput}
-                    placeholder='Số lượng hàng'
-                    keyboardType={'decimal-pad'}
-                    onChangeText={orderquantity => setOrderQuantity(orderquantity)}
-                    value={orderquantity}
-                />
-                < TextInput
-                   style={styles.ProductInput}
-                    placeholder='Ngày đăng'
-                    onChangeText={daysubmitted => setDaysubmitted(daysubmitted)}
-                    value={daysubmitted}
-                />
-
-                <View style={styles.StatusPicker}>
-                    <RNPickerSelect
-                    placeholder={{label : "Chọn trạng thái sản phẩm", value: null}}
-                    onValueChange={(itemValue) => setStatus(itemValue)}
-                    items={[
-                        { label : "Có sẵn", value: "Có Sẵn" },
-                        { label: "Đang order", value: "Đang Order"}
-
-                    ]} />
+            </View>
+            <View style={styles.InfoSpace}>
+                <View style={styles.HalfSpace}>
+                <View style={styles.InputSpace}>
+                    <TextInput
+                        placeholder='Tên'
+                        onChangeText={tenSP => setTenSP(tenSP)}
+                        value={tenSP}
+                    />
                 </View>
-
-
+                <View style={styles.InputSpace}>   
+                    <TextInput
+                        placeholder='Code'
+                        onChangeText={code => setCode(code)}
+                        value={code}
+                    />
+                </View>  
+                <View style={styles.InputSpace}>     
+                    <TextInput
+                        placeholder='Giá Nhập'
+                        keyboardType={'decimal-pad'}
+                        onChangeText={giaNhap => setGiaNhap(giaNhap)}
+                        value={giaNhap}
+                    />
+                </View>
+                <View style={styles.InputSpace}>  
+                    <TextInput
+                        placeholder='Giá Bán Lẻ'
+                        keyboardType={'decimal-pad'}
+                        onChangeText={giaBanLe => setGiaBanLe(giaBanLe)}
+                        value={giaBanLe}
+                    />
+                </View>
+                <View style={styles.InputSpace}>      
+                    <TextInput
+                        placeholder='Giá CTV'
+                        keyboardType={'decimal-pad'}
+                        onChangeText={giaCTV => setGiaCTV(giaCTV)}
+                        value={giaCTV}
+                    />
+                </View>
+                </View>
+                <View style={styles.HalfSpace}>
+                    <View style={styles.InputSpace}>  
+                    < TextInput
+                        placeholder='Ngày đăng'
+                        onChangeText={ngayDang => setNgayDang(ngayDang)}
+                        value={ngayDang}
+                    />
+                    </View>
+                    <View style={styles.InputSpace}>  
+                    < TextInput
+                        placeholder='Nơi nhập'
+                        onChangeText={noiNhap => setNoiNhap(noiNhap)}
+                        value={noiNhap}
+                    />
+                    </View>
+                    <View style={styles.InputSpace}>
+                        < TextInput
+                            placeholder='Số lượng nhập'
+                            keyboardType={'decimal-pad'}
+                            onChangeText={soluongNhap => setSoluongNhap(soluongNhap)}
+                            value={soluongNhap}
+                        />
+                    </View> 
+                    <View style={styles.InputSpace}>  
+                    <TextInput
+                        placeholder='Số lượng bán lẻ'
+                        keyboardType={'decimal-pad'}
+                        onChangeText={soluongBanLe => setSoluongBanLe(soluongBanLe)}
+                        value={soluongBanLe}
+                    />
+                    </View>
+                    <View style={styles.InputSpace}>  
+                    <TextInput
+                        placeholder='Số lượng bán CTV'
+                        keyboardType={'decimal-pad'}
+                        onChangeText={soluongBanCTV => setSoluongBanCTV(soluongBanCTV)}
+                        value={soluongBanCTV}
+                    />
+                    </View>
+                </View>
                 
-
-                <TouchableOpacity style={styles.SendBot} onPress={() => sendData()}>
+            </View> 
+            <View style={styles.BotSpace}>
+            <TouchableOpacity style={styles.SendBot} onPress={() => sendData()}>
                     <Text> Lưu Sản Phẩm </Text>
-                </TouchableOpacity>
-            </View>  
+            </TouchableOpacity>
+            </View>   
         </KeyboardAvoidingView>
     )
 }
 const styles = StyleSheet.create({
     Container: {
         flex:1,
-        //justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#f5ceb2',
+        minHeight: '70%'
     },
     LoadingStyle:{
         margin: 10,
@@ -216,50 +245,72 @@ const styles = StyleSheet.create({
         shadowRadius:4,
         elevation: 5
       },
+    AddImage:{
+        flex: 3,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     AddImageSpace:{
         borderWidth: 3,
-        height: '20%',
+        height: '80%',
         width: '60%',
         borderRadius: 10,
         backgroundColor: '#e7eaed',
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 20,
     },
     ProductImage:{
         width: '90%',
         height:'90%'
     },
+    InfoSpace:{
+        flex: 4,
+        flexDirection:'row',
+
+    },
+    InputSpace:{
+        height: 50,
+        minHeight: 15,
+        width: 160,
+        borderWidth: 5,
+        borderColor: '#efb65c',
+        backgroundColor: '#e7eaed',
+        borderRadius: 20,
+        marginTop: 10, 
+        justifyContent:'center',
+        alignItems: 'center'
+    },
     ProductInput: {
         height: 50,
-        width: '70%',
+        minHeight: 15,
+        width: 160,
         borderWidth: 5,
         borderColor: '#efb65c',
         backgroundColor: '#e7eaed',
         borderRadius: 20,
-        margin: 5,
-        padding: 10,
-        
+        marginTop: 10, 
+        justifyContent:'center',
+        alignItems: 'center'
     },
-    StatusPicker:{
-        height: 50,
-        width: '70%',
-        borderWidth: 5,
-        borderColor: '#efb65c',
-        backgroundColor: '#e7eaed',
-        borderRadius: 20,
-        margin: 5,
-        padding: 10
+    HalfSpace:{
+        flexDirection:'column',
+        marginRight: 15,
+        marginLeft: 30,
+    },
+    BotSpace:{
+        flex: 3,
+        alignItems:'center',
     },
     SendBot: {
+        alignItems:'center',
+        justifyContent:'center',
+        height: 40,
+        width: 120,
         borderColor: '#efb65c',
         borderWidth: 2,
         borderRadius: 10,
-        height: 30,
-        width:'30%',
-        alignItems:'center',
-        justifyContent: 'center',
         backgroundColor: '#efb65b',
-        marginTop:10,
+        marginTop: 30,
+
     }
 })

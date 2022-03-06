@@ -14,36 +14,25 @@ export default ProductCard = (props) => {
 
       navigation.navigate('Sản Phẩm',{id})
     }
-    const gotoOrder = (product) => {
-      navigation.navigate('Order', {product, navigation})
-    }
     return (
-    <View style={styles.Container}>
+    <TouchableOpacity 
+      style={styles.Container}
+      onPress={() => gotoDetails(item._id)}
+    
+    >
         <View style={styles.ProductContainer}>
           <Image
           source = {{uri: item.url}}
           style={styles.ProductImage} />
           <View style={styles.ProductTittleAndInfo}>
-            <TouchableOpacity
-             style={styles.ProductTittle}
-             onPress={() => gotoDetails(item._id)}
-             >
-              <Text style={styles.ProductTittleText}> {item.name} </Text>
-            </TouchableOpacity>
-            <View style={styles.ProductInfo}>
-                <Text> Code: {item.code}  </Text>
-                <Text> Số lượng: {item.orderquantity} </Text>
-                <Text> Giá Nhập: {item.cost}  </Text>
-                <Text> Giá Bán: {item.sell}  </Text>
-            </View>
+           
+              <Text style={styles.ProductTittleText}> {item.tenSP} </Text>
+              <Text style={styles.ProductTittleText}> Code: {item.code}  </Text>
+
           </View>
-          <View style ={styles.PlusBottom}>
-            <TouchableOpacity onPress={() => gotoOrder(item)}>
-              <AntDesign name='plussquare' size = '40' color='#efb65b'/>
-            </TouchableOpacity>
-          </View>
+
         </View>
-    </View>  
+    </TouchableOpacity>  
     )
 }
 const styles = StyleSheet.create({
@@ -59,7 +48,6 @@ const styles = StyleSheet.create({
     //   textAlign: 'center',
     // }
     ProductContainer:{
-      flex: 1,
       flexDirection:'row',
       marginTop: 20,
       minHeight: 120,
@@ -68,8 +56,7 @@ const styles = StyleSheet.create({
       backgroundColor:  '#FFFFFF',
     },
     ProductImage:{
-      flex: 3,
-      width:100,
+      width: 120,
       height: '80%',
       borderRadius: 20,
       marginTop: 12,
@@ -77,15 +64,18 @@ const styles = StyleSheet.create({
     },
     ProductTittleAndInfo:{
       flexDirection: 'column',
-      flex: 4,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginLeft: 40,
     },
-    ProductTittle:{
-      marginLeft: 80,
-      marginTop: 10,
-    },
+    // ProductTittle:{
+      
+    //   marginTop: 10,
+    // },
     ProductTittleText:{
       color: '#0C3674',
-      fontSize:  16,
+      fontSize:  20,
+      marginTop: 5,
     },
     ProductInfo:{
       marginLeft: 20,

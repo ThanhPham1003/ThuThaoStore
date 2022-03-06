@@ -5,8 +5,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostProductScreen from "../screens/PostProductScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import HomeScreen from '../screens/HomeScreen';
-import ListClientsScreen from "../screens/ListClientsScreen";
-import PostClientScreen from '../screens/PostClientScreen'
+
+import HistoryScreen from '../screens/HistoryScreen'
 export default TabStackScreens = () => {
     const TabStack = createBottomTabNavigator();
 
@@ -29,6 +29,8 @@ export default TabStackScreens = () => {
             iconName = focused ? 'person' : 'person-outline';
           }else if (route.name === 'Add Client') {
             iconName = focused ? 'ios-person-add' : 'ios-person-add-outline';
+          }else if (route.name === 'History'){
+            iconName = focused ? 'wallet' : 'wallet-outline';
           }
 
           // You can return any component that you like here!
@@ -41,9 +43,10 @@ export default TabStackScreens = () => {
             <TabStack.Navigator screenOptions={screenOptions}>
                 <TabStack.Screen name="Home" component={HomeScreen} options={{headerShown: false}} />
                 <TabStack.Screen name="Post" component={PostProductScreen} options={{headerShown: false}}/>
-                <TabStack.Screen name="Client" component={ListClientsScreen} options={{headerShown: false}}/>
-                <TabStack.Screen name="Add Client" component={PostClientScreen} options={{headerShown: false}}/>
-                <TabStack.Screen name="Profile" component={ProfileScreen} options={{headerShown: false}}/>
+                <TabStack.Screen name="History" component={HistoryScreen} options={{headerShown: false}}/>
+                {/* <TabStack.Screen name="Client" component={ListClientsScreen} options={{headerShown: false}}/>
+                <TabStack.Screen name="Add Client" component={PostClientScreen} options={{headerShown: false}}/> */}
+                {/* <TabStack.Screen name="Profile" component={ProfileScreen} options={{headerShown: false}}/> */}
                 
                 {/* <TabStack.Screen name="Details" component={DetailsScreen} /> */}
             </TabStack.Navigator>
