@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {NavigationContainer} from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import PostProductScreen from "../screens/PostProductScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+
 import HomeScreen from '../screens/HomeScreen';
 
 import HistoryScreen from '../screens/HistoryScreen'
@@ -23,8 +23,6 @@ export default TabStackScreens = () => {
               : 'home-outline';
           } else if (route.name === 'Post') {
             iconName = focused ? 'paw' : 'paw-outline';
-          }else if (route.name === 'Profile') {
-            iconName = focused ? 'person-circle' : 'person-circle-outline';
           }else if (route.name === 'Client') {
             iconName = focused ? 'person' : 'person-outline';
           }else if (route.name === 'Add Client') {
