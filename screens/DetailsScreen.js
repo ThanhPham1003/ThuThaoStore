@@ -298,7 +298,7 @@ export default DetailsScreen = ({route,navigation}) => {
                             <Text style={styles.ProductSpecsProfit}>Lợi nhuận: {loiNhuan}</Text>
                             
                         </View>
-                        <View style={styles.HalfProductSpecs}>
+                        <View style={styles.HalfRightProductSpecs}>
  
                             <Text style={styles.ProductSpecsText}>Số Lượng Nhập: {product.soluongNhap}</Text>
                             <Text style={styles.ProductSpecsText}>Số Lượng Bán Lẻ: {product.soluongBanLe}</Text>
@@ -387,9 +387,12 @@ const styles = StyleSheet.create({
     },
     HalfProductSpecs:{
         flexDirection: 'column',
-        marginLeft: 5,
+        marginLeft: 10,
     },
-
+    HalfRightProductSpecs:{
+        flexDirection: 'column',
+        marginLeft: 35,
+    },
     EditInputSpace:{
         flexDirection:'row'
     },
