@@ -120,6 +120,7 @@ export default DetailsScreen = ({route,navigation}) => {
 
             Alert.alert(res.data)
             setIsUpdated({isUpdated: true});
+            setIsHistoryUpdated({isHistoryUpdated: true});
             navigation.navigate('Thu Thao Store');
         }
     }
@@ -295,10 +296,10 @@ export default DetailsScreen = ({route,navigation}) => {
                             <Text style={styles.ProductSpecsText}>Giá Cộng Tác Viên: {product.giaCTV}</Text>
                             <Text style={styles.ProductSpecsText}>Ngày Đăng: {product.ngayDang}</Text>
                             <Text style={styles.ProductSpecsText}> Nơi Nhập: {product.noiNhap}</Text>
-                            <Text style={styles.ProductSpecsProfit}>Lợi nhuận: {loiNhuan}</Text>
+
                             
                         </View>
-                        <View style={styles.HalfRightProductSpecs}>
+                        <View style={styles.HalfProductSpecs}>
  
                             <Text style={styles.ProductSpecsText}>Số Lượng Nhập: {product.soluongNhap}</Text>
                             <Text style={styles.ProductSpecsText}>Số Lượng Bán Lẻ: {product.soluongBanLe}</Text>
@@ -317,7 +318,7 @@ export default DetailsScreen = ({route,navigation}) => {
                         keyExtractor={(item, index) => index.toString()}
                     />
                     </View> */}
-                
+                    <Text style={styles.ProductSpecsProfit}>Lợi nhuận: {loiNhuan}</Text>
                     <View style={styles.ButtonSpace}>
                         <TouchableOpacity style={styles.ButtonStyle} onPress={handleSoldout} >
                             <Text> Hoàn Thành </Text>
@@ -387,12 +388,9 @@ const styles = StyleSheet.create({
     },
     HalfProductSpecs:{
         flexDirection: 'column',
-        marginLeft: 10,
+        width:'50%'
     },
-    HalfRightProductSpecs:{
-        flexDirection: 'column',
-        marginLeft: 35,
-    },
+   
     EditInputSpace:{
         flexDirection:'row'
     },
@@ -419,6 +417,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     ProductSpecsProfit:{
+        marginLeft: 20,
         marginTop: 20,
         fontSize: 28,
         color: '#0C3674',

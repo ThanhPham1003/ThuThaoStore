@@ -113,6 +113,7 @@ export default function PostProductScreen(props){
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             style={styles.Container}
         >
+        
             <Modal
                 animationType="slide"
                 visible={!loaded}>
@@ -220,7 +221,8 @@ export default function PostProductScreen(props){
             <TouchableOpacity style={styles.SendBot} onPress={() => sendData()}>
                     <Text> Lưu Sản Phẩm </Text>
             </TouchableOpacity>
-            </View>   
+            </View>
+    
         </KeyboardAvoidingView>
     )
 }
@@ -269,7 +271,7 @@ const styles = StyleSheet.create({
 
     },
     InputSpace:{
-        height: 50,
+        height: 42,
         minHeight: 15,
         width: 160,
         borderWidth: 5,
